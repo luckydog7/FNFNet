@@ -37,7 +37,11 @@ export class ChatRoom extends Room<Stuff> {
 
     this.onMessage("message", (client, message) => {
       console.log(message.message);
-      thefullassmessage = "<" + users[uuids.indexOf(client.sessionId)] + "> " + message.message; 
+      var partofthefullassmessage:string = message.message;
+      if(partofthefullassmessage.startsWith(">")){
+        partofthefullassmessage = '[G]' + partofthefullassmessage + '[G]';
+      }
+      thefullassmessage = "<" + users[uuids.indexOf(client.sessionId)] + "> " + partofthefullassmessage; 
       chatHistory += thefullassmessage + "\n";
       theY -= 20;
       this.broadcast('message',{ message: thefullassmessage});
@@ -61,7 +65,7 @@ export class ChatRoom extends Room<Stuff> {
     chatHistory += "Server: User has joined the chat!" + "\n";
     theY -= 20;
     client.send("recvprev", { chatHist: chatHistory, axY: theY as unknown as string, motd: motd, rules: rules}); // - 1  chathist: chatHistory, axY: theY, motd: motd, rules: rules, uslist: users
-    this.broadcast("message", {message: "Server: User has joined the chat!\n"}, {except: client})
+    this.broadcast("message", {message: "Server: User has joined the chat!"}, {except: client})
   }
 
   onLeave (client: Client, consented: boolean) {
