@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project>
+	
+	<meta title="FNFNet" package="com.sample.fnfnet" version="1.0.0" company="Company Name" />
+	<app main="Main" path="Export" file="FNFNet" />
+	
+	<source path="Source" />
+	
+	<haxelib name="openfl" />
+	<haxelib name="extension-networking"/>
+
+	<window hidden="true"/>
+
+	<assets path="Assets" rename="assets" />
+	<assets path="config.json"/>
+	<assets path="motd.txt"/>
+	<assets path="rules.txt"/>
+</project>
