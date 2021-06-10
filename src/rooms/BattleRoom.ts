@@ -18,6 +18,7 @@ let rl = readline.createInterface({
 /////////////////////////////////////////
 var scorep1:number;
 var scorep2:number;
+var clientsconn:Array<String> = new Array();
 /*
       this.onMessage("string", async (client, message) => {
 
@@ -29,16 +30,17 @@ var scorep2:number;
     });
     */
 export class BattleRoom extends Room<Stuff> {
-  max_connections = 2;
+  maxClients = 2;
   public static stuff: string;
   static chatHistory: string;
   onCreate (options: any) {
     this.setState(new Stuff());
     scorep1 = 0;
     scorep2 = 0;
-
+    
     this.onMessage("message", (client, message) => {
       console.log(message.rating);
+      if(client.)
       switch(message.rating){
         case 'shit':
           scorep1 += 50;
@@ -49,10 +51,11 @@ export class BattleRoom extends Room<Stuff> {
         case 'sick':
           scorep1 += 350;
       }
+
     });
   }
   onJoin (client: Client, options: any) {
-    if(this.clients.length = 2) this.broadcast("start");
+    if(this.clients.length >= 2) this.broadcast("start");
   }
 
   onLeave (client: Client, consented: boolean) {
