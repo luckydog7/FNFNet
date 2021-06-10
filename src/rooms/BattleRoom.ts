@@ -16,34 +16,43 @@ let rl = readline.createInterface({
 //      
 //
 /////////////////////////////////////////
-var amUsers: number;
-var theY: number = 0;
-var users:Array<String> = new Array();
-var uuids:Array<String> = new Array();
-var hasAdmin:Array<Boolean> = new Array();
-var chatHistory:String;
-var thefullassmessage:String;
-var test: number;
-export class BattleRoom extends Room<Stuff> {
+var score:number;
+/*
+      this.onMessage("string", async (client, message) => {
 
-  public static stuff: string;
-  static chatHistory: string;
-  onCreate (options: any) {
-    this.setState(new Stuff());
-
-    this.onMessage("string", async (client, message) => {
+    }
         if (message.join){
             const room = await matchMaker.createRoom("battle", { mode: "duo" });
             
         }
     });
+    */
+export class BattleRoom extends Room<Stuff> {
+
+  public static stuff: string;
+  static chatHistory: string;
+    onCreate (options: any) {
+      score = 0;
+      this.setState(new Stuff());
   }
   onJoin (client: Client, options: any) {
-
+    this.onMessage("message", (client, message) => {
+      console.log(message.rating);
+      switch(message.rating){
+        case 'shit':
+          score += 50;
+        case 'bad':
+          score += 100;
+        case 'good':
+          score += 200;
+        case 'sick':
+          score += 350;
+      }
+    });
   }
 
   onLeave (client: Client, consented: boolean) {
-
+    console.log("the score is: " + score / 2);
   }
 
   onDispose() {

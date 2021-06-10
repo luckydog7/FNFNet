@@ -1,28 +1,18 @@
-# Welcome to Colyseus!
+# Welcome to FNFNet
+This is the main repository for FNFNet
 
-This project has been created using [⚔️ `create-colyseus-app`](https://github.com/colyseus/create-colyseus-app/) - an npm init template for kick starting a Colyseus project in TypeScript.
-
-[Documentation](http://docs.colyseus.io/)
-
-## :crossed_swords: Usage
-
-```
+## Startup instructions
+it's very simple, just type the following commands:
+```sh
+npm i 
 npm start
 ```
+the server will listen on port 42069, connect with a client like TrollEngine
+## Config
+### motd.txt
+this file contains the MOTD
+### rules.txt
+this file contains the rules for the chat
+### config.json
+This controls all sorts of stuff like discord
 
-## Structure
-
-- `index.ts`: main entry point, register an empty room handler and attach [`@colyseus/monitor`](https://github.com/colyseus/colyseus-monitor)
-- `src/rooms/MyRoom.ts`: an empty room handler for you to implement your logic
-- `src/rooms/schema/MyRoomState.ts`: an empty schema used on your room's state.
-- `loadtest/example.ts`: scriptable client for the loadtest tool (see `npm run loadtest`)
-- `package.json`:
-    - `scripts`:
-        - `npm start`: runs `ts-node-dev index.ts`
-        - `npm run loadtest`: runs the [`@colyseus/loadtest`](https://github.com/colyseus/colyseus-loadtest/) tool for testing the connection, using the `loadtest/example.ts` script.
-- `tsconfig.json`: TypeScript configuration file
-
-
-## License
-
-MIT
