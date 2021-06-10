@@ -14,5 +14,5 @@ this file contains the MOTD
 ### rules.txt
 this file contains the rules for the chat
 ### config.json
-This controls all sorts of stuff like discord
+This controls all sorts of stuff like discord tunneling and disabling certain features of the server
 

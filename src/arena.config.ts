@@ -26,7 +26,7 @@ export default Arena({
          */
 
         app.get("/", (req, res) => {
-            res.send("cuck :smile:");
+            app.use(express.static("html"));
         });
         
         app.get("/post", (req, res) => {

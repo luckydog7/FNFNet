@@ -16,7 +16,8 @@ let rl = readline.createInterface({
 //      
 //
 /////////////////////////////////////////
-var score:number;
+var scorep1:number;
+var scorep2:number;
 /*
       this.onMessage("string", async (client, message) => {
 
@@ -40,13 +41,13 @@ export class BattleRoom extends Room<Stuff> {
       console.log(message.rating);
       switch(message.rating){
         case 'shit':
-          score += 50;
+          scorep1 += 50;
         case 'bad':
-          score += 100;
+          scorep1 += 100;
         case 'good':
-          score += 200;
+          scorep1 += 200;
         case 'sick':
-          score += 350;
+          scorep1 += 350;
       }
     });
   }
