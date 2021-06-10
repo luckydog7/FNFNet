@@ -9,6 +9,8 @@ export class Stuff extends Schema {
 
   @type("string") recvprev: string;
 
+  @type("string") start: string;
+
   @type("int32") axY: Number = 0;
 
 }

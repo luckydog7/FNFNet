@@ -29,14 +29,14 @@ var scorep2:number;
     });
     */
 export class BattleRoom extends Room<Stuff> {
-
+  max_connections = 2;
   public static stuff: string;
   static chatHistory: string;
-    onCreate (options: any) {
-      score = 0;
-      this.setState(new Stuff());
-  }
-  onJoin (client: Client, options: any) {
+  onCreate (options: any) {
+    this.setState(new Stuff());
+    scorep1 = 0;
+    scorep2 = 0;
+
     this.onMessage("message", (client, message) => {
       console.log(message.rating);
       switch(message.rating){
@@ -51,9 +51,12 @@ export class BattleRoom extends Room<Stuff> {
       }
     });
   }
+  onJoin (client: Client, options: any) {
+    if(this.clients.length = 2) this.broadcast("start");
+  }
 
   onLeave (client: Client, consented: boolean) {
-    console.log("the score is: " + score / 2);
+    console.log("the score is: " + scorep1);
   }
 
   onDispose() {
