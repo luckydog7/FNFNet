@@ -40,18 +40,30 @@ export class BattleRoom extends Room<Stuff> {
     
     this.onMessage("message", (client, message) => {
       console.log(message.rating);
-      if(client.)
-      switch(message.rating){
-        case 'shit':
-          scorep1 += 50;
-        case 'bad':
-          scorep1 += 100;
-        case 'good':
-          scorep1 += 200;
-        case 'sick':
-          scorep1 += 350;
+      if(client.sessionId == this.clients[0].sessionId){
+        switch(message.rating){
+          case 'shit':
+            scorep1 += 50;
+          case 'bad':
+            scorep1 += 100;
+          case 'good':
+            scorep1 += 200;
+          case 'sick':
+            scorep1 += 350;
+        }
+      }else{
+        switch(message.rating){
+          case 'shit':
+            scorep2 += 50;
+          case 'bad':
+            scorep2 += 100;
+          case 'good':
+            scorep2 += 200;
+          case 'sick':
+            scorep2 += 350;
+        }
       }
-
+      this.broadcast("retscore", {p1score: scorep1, p2score: scorep2});
     });
   }
   onJoin (client: Client, options: any) {
