@@ -63,7 +63,8 @@ export class BattleRoom extends Room<Stuff> {
             scorep2 += 350;
         }
       }
-      this.broadcast("retscore", {p1score: scorep1, p2score: scorep2});
+      this.clients[0].send("retscore", {p1score: scorep1, p2score: scorep2});
+      this.clients[1].send("retscore", {p1score: scorep1, p2score: scorep2});
     });
   }
   onJoin (client: Client, options: any) {

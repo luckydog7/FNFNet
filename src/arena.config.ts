@@ -1,5 +1,6 @@
 import Arena from "@colyseus/arena";
 import { monitor } from "@colyseus/monitor";
+import express from "express";
 import { BattleRoom } from "./rooms/BattleRoom";
 /**
  * Import your Room files
@@ -26,7 +27,7 @@ export default Arena({
          */
 
         app.get("/", (req, res) => {
-            app.use(express.static("html"));
+            res.send('test');
         });
         
         app.get("/post", (req, res) => {
