@@ -37,7 +37,7 @@ export class BattleRoom extends Room<Stuff> {
     this.setState(new Stuff());
     scorep1 = 0;
     scorep2 = 0;
-    
+    console.log(this.roomId);
     this.onMessage("message", (client, message) => {
       console.log(message.rating);
       if(client.sessionId == this.clients[0].sessionId){
@@ -68,6 +68,7 @@ export class BattleRoom extends Room<Stuff> {
     });
   }
   onJoin (client: Client, options: any) {
+    client.send("message", {iden: this.roomId});
     if(this.clients.length >= 2) this.broadcast("start");
   }
 
