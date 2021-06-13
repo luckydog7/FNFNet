@@ -4,10 +4,6 @@ import * as readline from 'readline';
 import * as fs from 'fs';
 import fetch from 'cross-fetch';
 import { discord } from "../modules/discord";
-let rl = readline.createInterface({
-    input: process.stdin,
-    output: process.stdout
-});
 /////////////////////////////////////////
 //
 //      FNFNet
@@ -31,10 +27,10 @@ const dsc = new discord();
 export class ChatRoom extends Room<Stuff> {
 
   public static stuff: string;
-  static chatHistory: string;
+  public static chatHistory: string;
   onCreate (options: any) {
     this.setState(new Stuff());
-
+    this.autoDispose = false;
     this.onMessage("message", (client, message) => {
       console.log(message.message);
       var partofthefullassmessage:string = message.message;

@@ -1,6 +1,7 @@
 import Arena from "@colyseus/arena";
 import { monitor } from "@colyseus/monitor";
 import express from "express";
+import { commandHandler } from "./modules/commandHandler";
 import { BattleRoom } from "./rooms/BattleRoom";
 /**
  * Import your Room files
@@ -44,8 +45,9 @@ export default Arena({
 
 
     beforeListen: () => {
+        commandHandler.start();
         /**
          * Before before gameServer.listen() is called.
          */
-    }
+    },
 });
