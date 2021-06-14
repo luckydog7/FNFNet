@@ -12,6 +12,8 @@ export class Stuff extends Schema {
   @type("string") start: string;
 
   @type("string") creatematch: string;
+  
+  @type("string") songname: string;
 
   @type('int32') retnumber: number;
 

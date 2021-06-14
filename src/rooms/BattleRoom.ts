@@ -38,6 +38,10 @@ export class BattleRoom extends Room<Stuff> {
     scorep1 = 0;
     scorep2 = 0;
     console.log(this.roomId);
+    this.onMessage('songname', (client, message) => {
+      this.setMetadata({song: message.song});
+      client.send("creatematch", {song: message.song});
+    });
     this.onMessage("message", (client, message) => {
       console.log(message.rating);
       if(client.sessionId == this.clients[0].sessionId){
@@ -72,8 +76,14 @@ export class BattleRoom extends Room<Stuff> {
     });
   }
   onJoin (client: Client, options: any) {
-    client.send("message", {iden: this.roomId});
-    if(this.clients.length >= 2) this.broadcast("start");
+    console.log('client joined');
+    if(this.clients.length != 2)client.send("message", {iden: this.roomId});
+    if(this.clients.length >= 2) {
+      client.send('message', {song: 'philly'});
+      setTimeout(function(){console.log("ass");}, 3000);
+      this.clients[0].send("start");
+      this.clients[1].send("start");
+    }
   }
 
   onLeave (client: Client, consented: boolean) {
