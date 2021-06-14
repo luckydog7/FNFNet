@@ -11,6 +11,8 @@ export class Stuff extends Schema {
 
   @type("string") start: string;
 
+  @type("string") creatematch: string;
+
   @type('int32') retnumber: number;
 
   @type("int32") axY: Number = 0;
