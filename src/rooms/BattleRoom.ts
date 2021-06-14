@@ -89,6 +89,8 @@ export class BattleRoom extends Room<Stuff> {
       this.clients[0].send("message", {iden: this.roomId});
       setTimeout(() => { 
         this.clients[1].send('message', {song: song, diff: diff, week: week});
+       }, 1000);
+      setTimeout(() => { 
         this.clients[0].send("start");
         this.clients[1].send("start");
        }, 5000);
