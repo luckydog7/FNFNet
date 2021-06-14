@@ -19,6 +19,10 @@ let rl = readline.createInterface({
 var scorep1:number;
 var scorep2:number;
 var clientsconn:Array<String> = new Array();
+
+var song: string;
+var diff: number;
+var week: number;
 /*
       this.onMessage("string", async (client, message) => {
 
@@ -40,7 +44,10 @@ export class BattleRoom extends Room<Stuff> {
     console.log(this.roomId);
     this.onMessage('songname', (client, message) => {
       this.setMetadata({song: message.song});
-      client.send("creatematch", {song: message.song});
+      song = message.song;
+      diff = message.diff;
+      week = message.week
+      client.send("creatematch", {song: message.song, diff: message.diff, week: message.week});
     });
     this.onMessage("message", (client, message) => {
       console.log(message.rating);
@@ -79,10 +86,13 @@ export class BattleRoom extends Room<Stuff> {
     console.log('client joined');
     if(this.clients.length != 2)client.send("message", {iden: this.roomId});
     if(this.clients.length >= 2) {
-      client.send('message', {song: 'philly'});
-      setTimeout(function(){console.log("ass");}, 3000);
-      this.clients[0].send("start");
-      this.clients[1].send("start");
+      this.clients[0].send("message", {iden: this.roomId});
+      setTimeout(() => { 
+        this.clients[1].send('message', {song: song, diff: diff, week: week});
+        this.clients[0].send("start");
+        this.clients[1].send("start");
+       }, 5000);
+
     }
   }
 
