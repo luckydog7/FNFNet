@@ -51,7 +51,11 @@ export class BattleRoom extends Room<Stuff> {
       song = message.song;
       diff = message.diff;
       week = message.week
-      client.send("creatematch", {song: message.song, diff: message.diff, week: message.week});
+      try{
+        client.send("creatematch", {song: message.song, diff: message.diff, week: message.week});
+      }catch(err){
+        console.log(err);
+      }
     });
     this.onMessage("message", (client, message) => {
       console.log(message.rating);
