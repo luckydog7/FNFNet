@@ -39,6 +39,10 @@ export class BattleRoom extends Room<Stuff> {
   static chatHistory: string;
   onCreate (options: any) {
     this.setState(new Stuff());
+    this.autoDispose = true;
+    song = "";
+    diff = 0;
+    week = 0
     scorep1 = 0;
     scorep2 = 0;
     console.log(this.roomId);

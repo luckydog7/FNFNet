@@ -39,7 +39,7 @@ export class ChatRoom extends Room<Stuff> {
       }
       thefullassmessage = "<" + users[uuids.indexOf(client.sessionId)] + "> " + partofthefullassmessage; 
       chatHistory += thefullassmessage + "\n";
-      theY -= 15;
+      theY -= 16;
       this.broadcast('message',{ message: thefullassmessage});
       if(config.discord.enabled) dsc.send(config.discord.url, thefullassmessage);
     });
@@ -59,7 +59,7 @@ export class ChatRoom extends Room<Stuff> {
     var rules = fs.readFileSync("rules.txt", "utf-8");
     console.log(motd);
     chatHistory += "Server: User has joined the chat!" + "\n";
-    theY -= 15;
+    theY -= 16;
     client.send("recvprev", { chatHist: chatHistory, axY: theY as unknown as string, motd: motd, rules: rules}); // - 1  chathist: chatHistory, axY: theY, motd: motd, rules: rules, uslist: users
     this.broadcast("message", {message: "Server: User has joined the chat!"}, {except: client})
   }
@@ -72,7 +72,7 @@ export class ChatRoom extends Room<Stuff> {
     //uuids.remove(client.sessionId);
     test--;
     chatHistory += "Server: User has disconnected from the chat." + "\n";
-    theY -= 15;
+    theY -= 16;
     this.broadcast('reul', {uslist: users, message: "Server: User has disconnected from the chat.\n"});
     client.leave();
   }
