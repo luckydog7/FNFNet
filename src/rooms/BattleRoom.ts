@@ -92,8 +92,9 @@ export class BattleRoom extends Room<Stuff> {
   }
   onJoin (client: Client, options: any) {
     console.log('client joined');
-    if(this.clients.length != 2)client.send("message", {iden: this.roomId});
+    if(this.clients.length != 2) try{ client.send("message", {iden: this.roomId}); }catch(error){ console.log(error); }
     if(this.clients.length >= 2) {
+      try{
       this.clients[0].send("message", {iden: this.roomId});
       setTimeout(() => { 
         this.clients[1].send('message', {song: song, diff: diff, week: week});
@@ -102,7 +103,7 @@ export class BattleRoom extends Room<Stuff> {
         this.clients[0].send("start");
         this.clients[1].send("start");
        }, 5000);
-
+      }catch(error){ console.log(error); }
     }
   }
 
