@@ -27,29 +27,28 @@ let rl = readline.createInterface({
     });
     */
 export class BattleRoom extends Room<Stuff> {
-  static scorep1:number;
-  static scorep2:number;
+  scorep1:number;
+  scorep2:number;
 
-  static song: string;
-  static diff: number;
-  static week: number;
+  song: string;
+  diff: number;
+  week: number;
   maxClients = 2;
   public static stuff: string;
-  static chatHistory: string;
   onCreate (options: any) {
     this.setState(new Stuff());
     this.autoDispose = true;
-    BattleRoom.song = "";
-    BattleRoom.diff = 0;
-    BattleRoom.week = 0
-    BattleRoom.scorep1 = 0;
-    BattleRoom.scorep2 = 0;
+    this.song = "";
+    this.diff = 0;
+    this.week = 0
+    this.scorep1 = 0;
+    this.scorep2 = 0;
     console.log(this.roomId);
     this.onMessage('songname', (client, message) => {
       this.setMetadata({song: message.song});
-      BattleRoom.song = message.song;
-      BattleRoom.diff = message.diff;
-      BattleRoom.week = message.week
+      this.song = message.song;
+      this.diff = message.diff;
+      this.week = message.week
       try{
         client.send("creatematch", {song: message.song, diff: message.diff, week: message.week});
       }catch(err){
@@ -61,29 +60,29 @@ export class BattleRoom extends Room<Stuff> {
       if(client.sessionId == this.clients[0].sessionId){
         switch(message.rating){
           case 'shit':
-            BattleRoom.scorep1 += 50;
+            this.scorep1 += 50;
           case 'bad':
-            BattleRoom.scorep1 += 100;
+            this.scorep1 += 100;
           case 'good':
-            BattleRoom.scorep1 += 200;
+            this.scorep1 += 200;
           case 'sick':
-            BattleRoom.scorep1 += 350;
+            this.scorep1 += 350;
         }
       }else{
         switch(message.rating){
           case 'shit':
-            BattleRoom.scorep2 += 50;
+            this.scorep2 += 50;
           case 'bad':
-            BattleRoom.scorep2 += 100;
+            this.scorep2 += 100;
           case 'good':
-            BattleRoom.scorep2 += 200;
+            this.scorep2 += 200;
           case 'sick':
-            BattleRoom.scorep2 += 350;
+            this.scorep2 += 350;
         }
       }
       try{
-        this.clients[0].send("retscore", {p1score: BattleRoom.scorep1, p2score: BattleRoom.scorep2});
-        this.clients[1].send("retscore", {p1score: BattleRoom.scorep1, p2score: BattleRoom.scorep2});
+        this.clients[0].send("retscore", {p1score: this.scorep1, p2score: this.scorep2});
+        this.clients[1].send("retscore", {p1score: this.scorep1, p2score: this.scorep2});
       }catch(error){
         console.log(error);
       }
@@ -96,7 +95,7 @@ export class BattleRoom extends Room<Stuff> {
       try{
       this.clients[0].send("message", {iden: this.roomId});
       setTimeout(() => { 
-        this.clients[1].send('message', {song: BattleRoom.song, diff: BattleRoom.diff, week: BattleRoom.week});
+        this.clients[1].send('message', {song: this.song, diff: this.diff, week: this.week});
        }, 1000);
       setTimeout(() => { 
         this.clients[0].send("start");
@@ -107,7 +106,7 @@ export class BattleRoom extends Room<Stuff> {
   }
 
   onLeave (client: Client, consented: boolean) {
-    console.log("the score is: " + BattleRoom.scorep1);
+    console.log("the score is: " + this.scorep1);
   }
 
   onDispose() {
