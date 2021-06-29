@@ -30,6 +30,9 @@ export class BattleRoom extends Room<Stuff> {
   scorep1:number;
   scorep2:number;
 
+  p1ready:Boolean;
+  p2ready:Boolean;
+
   song: string;
   diff: number;
   week: number;
@@ -44,6 +47,19 @@ export class BattleRoom extends Room<Stuff> {
     this.scorep1 = 0;
     this.scorep2 = 0;
     console.log(this.roomId);
+    
+    this.onMessage('misc', (client, message) => {
+      try{
+        if(client.sessionId == this.clients[0].sessionId) this.p1ready = message.ready;
+        else this.p2ready = message.ready;
+        if(this.p1ready && this.p2ready){
+          this.clients[0].send("start");
+          this.clients[1].send("start");
+        }
+      }catch(e){
+        console.log(e);
+      }
+    });
     this.onMessage('songname', (client, message) => {
       this.setMetadata({song: message.song});
       this.song = message.song;
@@ -93,14 +109,9 @@ export class BattleRoom extends Room<Stuff> {
     if(this.clients.length != 2) try{ client.send("message", {iden: this.roomId}); }catch(error){ console.log(error); }
     if(this.clients.length >= 2) {
       try{
-      this.clients[0].send("message", {iden: this.roomId});
-      setTimeout(() => { 
-        this.clients[1].send('message', {song: this.song, diff: this.diff, week: this.week});
-       }, 1000);
-      setTimeout(() => { 
-        this.clients[0].send("start");
-        this.clients[1].send("start");
-       }, 5000);
+        setTimeout(() => {
+          this.clients[1].send('message', {song: this.song, diff: this.diff, week: this.week});
+        }, 2000);
       }catch(error){ console.log(error); }
     }
   }
