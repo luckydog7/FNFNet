@@ -25,11 +25,19 @@ let rl = readline.createInterface({
             
         }
     });
-    */
+*/
+interface PlayerData {
+  name:string,
+  ready:boolean,
+  score:number
+}
 export class BattleRoom extends Room<Stuff> {
   scorep1:number;
   scorep2:number;
 
+  player1:PlayerData;
+  player2:PlayerData;
+  
   p1ready:Boolean;
   p2ready:Boolean;
 
@@ -52,10 +60,8 @@ export class BattleRoom extends Room<Stuff> {
       try{
         if(client.sessionId == this.clients[0].sessionId) this.p1ready = message.ready;
         else this.p2ready = message.ready;
-        if(this.p1ready && this.p2ready){
-          this.clients[0].send("start");
-          this.clients[1].send("start");
-        }
+        if(this.p1ready && this.p2ready)this.safeSend('start');
+        this.safeSend('misc', {p1: this.p1ready, p2: this.p2ready});
       }catch(e){
         console.log(e);
       }
@@ -123,5 +129,11 @@ export class BattleRoom extends Room<Stuff> {
   onDispose() {
     console.log("room", this.roomId, "disposing...");
   }
-
+  safeSend(type:string, data:any = {}){
+    if(this.clients.length<2) this.clients[0].send(type, data);
+    else{
+      this.clients[0].send(type, data);
+      this.clients[1].send(type, data);
+    }
+  }
 }
