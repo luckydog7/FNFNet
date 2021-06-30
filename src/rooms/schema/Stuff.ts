@@ -15,6 +15,8 @@ export class Stuff extends Schema {
 
   @type("string") misc: string;
   
+  @type("string") userleft: string;
+
   @type("string") songname: string;
 
   @type('int32') retnumber: number;

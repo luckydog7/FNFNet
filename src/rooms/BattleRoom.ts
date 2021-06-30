@@ -103,8 +103,7 @@ export class BattleRoom extends Room<Stuff> {
         }
       }
       try{
-        this.clients[0].send("retscore", {p1score: this.scorep1, p2score: this.scorep2});
-        this.clients[1].send("retscore", {p1score: this.scorep1, p2score: this.scorep2});
+        this.safeSend("retscore", {p1score: this.scorep1, p2score: this.scorep2});
       }catch(error){
         console.log(error);
       }
