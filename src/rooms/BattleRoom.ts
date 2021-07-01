@@ -35,8 +35,10 @@ export class BattleRoom extends Room<Stuff> {
   scorep1:number;
   scorep2:number;
 
-  player1:PlayerData;
-  player2:PlayerData;
+  startedGame:boolean = false;
+
+  player1:PlayerData = {name: 'guest', ready: false, score: 0};
+  player2:PlayerData = {name: 'guest', ready: false, score: 0};
   
   p1ready:Boolean;
   p2ready:Boolean;
@@ -60,7 +62,10 @@ export class BattleRoom extends Room<Stuff> {
       try{
         if(client.sessionId == this.clients[0].sessionId) this.p1ready = message.ready;
         else this.p2ready = message.ready;
-        if(this.p1ready && this.p2ready)this.safeSend('start');
+        if(this.p1ready && this.p2ready){
+          this.startedGame = true
+          this.safeSend('start');
+        }
         this.safeSend('misc', {p1: this.p1ready, p2: this.p2ready});
       }catch(e){
         console.log(e);
@@ -77,35 +82,45 @@ export class BattleRoom extends Room<Stuff> {
         console.log(err);
       }
     });
-    this.onMessage("message", (client, message) => {
-      console.log(message.rating);
-      if(client.sessionId == this.clients[0].sessionId){
-        switch(message.rating){
-          case 'shit':
-            this.scorep1 += 50;
-          case 'bad':
-            this.scorep1 += 100;
-          case 'good':
-            this.scorep1 += 200;
-          case 'sick':
-            this.scorep1 += 350;
-        }
-      }else{
-        switch(message.rating){
-          case 'shit':
-            this.scorep2 += 50;
-          case 'bad':
-            this.scorep2 += 100;
-          case 'good':
-            this.scorep2 += 200;
-          case 'sick':
-            this.scorep2 += 350;
-        }
+    this.onMessage('recvprev', (client, message) => {
+      if(client.sessionId == this.clients[0].sessionId) {
+        this.player1.name = message.name;
       }
-      try{
-        this.safeSend("retscore", {p1score: this.scorep1, p2score: this.scorep2});
-      }catch(error){
-        console.log(error);
+      else {
+        this.player2.name = message.name;
+        this.safeSend('userjoin', {name: message.name});
+      }
+    });
+    this.onMessage("message", (client, message) => {
+      if(this.startedGame){
+        if(client.sessionId == this.clients[0].sessionId){
+          switch(message.rating){
+            case 'shit':
+              this.scorep1 += 50;
+            case 'bad':
+              this.scorep1 += 100;
+            case 'good':
+              this.scorep1 += 200;
+            case 'sick':
+              this.scorep1 += 350;
+          }
+        }else{
+          switch(message.rating){
+            case 'shit':
+              this.scorep2 += 50;
+            case 'bad':
+              this.scorep2 += 100;
+            case 'good':
+              this.scorep2 += 200;
+            case 'sick':
+              this.scorep2 += 350;
+          }
+        }
+        try{
+          this.safeSend("retscore", {p1score: this.scorep1, p2score: this.scorep2});
+        }catch(error){
+          console.log(error);
+        }
       }
     });
   }
@@ -115,13 +130,22 @@ export class BattleRoom extends Room<Stuff> {
     if(this.clients.length >= 2) {
       try{
         setTimeout(() => {
-          this.clients[1].send('message', {song: this.song, diff: this.diff, week: this.week});
+          this.clients[1].send('message', {song: this.song, diff: this.diff, week: this.week, p1name: this.player1.name});
         }, 2000);
       }catch(error){ console.log(error); }
     }
   }
 
   onLeave (client: Client, consented: boolean) {
+    if(client.sessionId == this.clients[0].sessionId && !this.startedGame){
+      for(let i = 0; i<this.clients.length; i++){
+        this.clients[i].leave();
+      }
+    }else{
+      this.player2.name = '';
+      this.p2ready = false;
+      this.safeSend('userleft', {})
+    }
     console.log("the score is: " + this.scorep1);
   }
 

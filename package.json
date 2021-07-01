@@ -6,7 +6,7 @@
   "main": "lib/index.js",
   "scripts": {
     "start-dev": "ts-node-dev --respawn --transpile-only src/index.ts",
-    "start": "ts-node --respawn --transpile-only src/index.ts",
+    "start": "ts-node --transpile-only src/index.ts",
     "loadtest": "colyseus-loadtest loadtest/example.ts --room my_room --numClients 2",
     "build": "npm run clean && tsc && node node_modules/copyfiles/copyfiles package.json ./lib && node node_modules/copyfiles/copyfiles arena.env ./lib",
     "clean": "node node_modules/rimraf/bin lib",
