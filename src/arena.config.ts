@@ -3,6 +3,8 @@ import { monitor } from "@colyseus/monitor";
 import express from "express";
 import { commandHandler } from "./modules/commandHandler";
 import { BattleRoom } from "./rooms/BattleRoom";
+import serveStatic from "serve-static";
+import serveIndex from 'serve-index';
 /**
  * Import your Room files
  */
@@ -26,10 +28,7 @@ export default Arena({
         /**
          * Bind your custom express routes here:
          */
-
-        app.get("/", (req, res) => {
-            res.send('test');
-        });
+         app.use('/', express.static('html'), serveIndex('html', {'icons': true}))
         
         app.get("/post", (req, res) => {
             res.send("It's time to kick ass and chew bubblegum!");
