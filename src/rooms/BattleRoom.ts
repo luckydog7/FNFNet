@@ -64,9 +64,9 @@ export class BattleRoom extends Room<Stuff> {
         else this.p2ready = message.ready;
         if(this.p1ready && this.p2ready){
           this.startedGame = true
-          this.safeSend('start');
+          this.broadcast('start');
         }
-        this.safeSend('misc', {p1: this.p1ready, p2: this.p2ready});
+        this.broadcast('misc', {p1: this.p1ready, p2: this.p2ready});
       }catch(e){
         console.log(e);
       }
@@ -88,7 +88,7 @@ export class BattleRoom extends Room<Stuff> {
       }
       else {
         this.player2.name = message.name;
-        this.safeSend('userjoin', {name: message.name});
+        this.broadcast('userjoin', {name: message.name});
       }
     });
     this.onMessage("message", (client, message) => {
@@ -117,7 +117,7 @@ export class BattleRoom extends Room<Stuff> {
           }
         }
         try{
-          this.safeSend("retscore", {p1score: this.scorep1, p2score: this.scorep2});
+          this.broadcast("retscore", {p1score: this.scorep1, p2score: this.scorep2});
         }catch(error){
           console.log(error);
         }
@@ -130,7 +130,7 @@ export class BattleRoom extends Room<Stuff> {
     if(this.clients.length >= 2) {
       try{
         setTimeout(() => {
-          this.clients[1].send('message', {song: this.song, diff: this.diff, week: this.week, p1name: this.player1.name});
+          if(this.clients.length >= 2) this.clients[1].send('message', {song: this.song, diff: this.diff, week: this.week, p1name: this.player1.name});
         }, 2000);
       }catch(error){ console.log(error); }
     }
@@ -144,7 +144,7 @@ export class BattleRoom extends Room<Stuff> {
     }else{
       this.player2.name = '';
       this.p2ready = false;
-      this.safeSend('userleft', {})
+      this.broadcast('userleft', {})
     }
     console.log("the score is: " + this.scorep1);
   }
