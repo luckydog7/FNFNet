@@ -6,7 +6,7 @@ import fetch from 'cross-fetch';
 */
 export class discord {
     send(url:string, message:String){
-        var data = { content: message };
+        var data = { content: message, allowed_mentions: false };
 
         //POST request with body equal on data in JSON format
         fetch(url, {
