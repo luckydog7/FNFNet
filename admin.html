@@ -1,0 +1,49 @@
+<h1>if you found this page by complete accident then congrats it's just a tool to add to json not upload</h1>
+<form name="modding" action="">
+    <p>Song Name: <input id="name"></p>
+    <p>Origin: <input id="origin"></p>
+    <p>Made By: <input id="madeby"></p>
+    <p>Description: <input id="desc"></p>
+    <p id="status"></p>
+    </br>
+    Output:
+    <textarea id="output" cols=50 rows=5></textarea>
+</form>
+
+<button onclick="thefunny();">Add Song</button>
+<script>
+function thefunny(){
+    fetch('modlist.json')
+    .then(response => response.json())
+    .then(jsonResponse => {
+        var parserdata = jsonResponse; // too lazy /shrug
+        parserdata.mods.push(document.getElementById('name').value);
+        parserdata.orig.push(document.getElementById('origin').value);
+        parserdata.madeby.push(document.getElementById('madeby').value);
+        parserdata.desc.push(document.getElementById('desc').value);
+        document.getElementById('status').innerHTML = "JSON generated!";
+        document.getElementById('output').value = JSON.stringify(parserdata);
+        //jqueryfunny(JSON.stringify(parserdata));
+    });
+}
+
+function jqueryfunny(input){
+    $( "form" ).on( "submit", function(e) {
+ 
+    var dataString = $(this).serialize();
+  
+ // alert(dataString); return false;
+
+    $.ajax({
+    type: "POST",
+    url: "bin/process.php",
+    data: input,
+    success: function () {
+        document.write('complete');
+    }
+    });
+
+    e.preventDefault();
+    });
+}
+</script>
