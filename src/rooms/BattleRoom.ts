@@ -56,6 +56,7 @@ export class BattleRoom extends Room<Stuff> {
     this.week = 0
     this.scorep1 = 0;
     this.scorep2 = 0;
+    this.roomId = this.genID();
     console.log(this.roomId);
     
     this.onMessage('misc', (client, message) => {
@@ -152,11 +153,22 @@ export class BattleRoom extends Room<Stuff> {
   onDispose() {
     console.log("room", this.roomId, "disposing...");
   }
-  safeSend(type:string, data:any = {}){
+
+  safeSend(type:string, data:any = {}){ //DEPRECATED DONT USE!
     if(this.clients.length<2) this.clients[0].send(type, data);
     else{
       this.clients[0].send(type, data);
       this.clients[1].send(type, data);
     }
   }
+
+  genID(){
+    var chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJLKMNOPQRSTUVWXYZ123456789#';
+    var bullarray:string = '';
+    for(var i = 0; i < 5; i++){
+      bullarray += chars[Math.floor(Math.random() * (chars.length - 1 + 1) + 0)];
+    }
+    return bullarray;
+  }
+
 }
