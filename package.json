@@ -1,8 +1,8 @@
 {
   "private": true,
-  "name": "my-app",
-  "version": "1.0.0",
-  "description": "npm init template for bootstrapping an empty Colyseus project",
+  "name": "FNFNet Server",
+  "version": "2.1.0",
+  "description": "a dumb server for a dumb game",
   "main": "lib/index.js",
   "scripts": {
     "start-dev": "ts-node-dev --respawn --transpile-only src/index.ts",

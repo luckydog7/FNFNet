@@ -92,6 +92,14 @@ export class BattleRoom extends Room<Stuff> {
         this.broadcast('userjoin', {name: message.name});
       }
     });
+    this.onMessage('chatHist', (client, message) => {
+      if(this.clients[0].sessionId == client.sessionId){
+        this.player1.name = message.name;
+      }else {
+        this.player2.name = message.name;
+      }
+      this.broadcast('chatHist', {p1name: this.player1.name, p2name: this.player2.name});
+    });
     this.onMessage("message", (client, message) => {
       if(this.startedGame){
         if(client.sessionId == this.clients[0].sessionId){
