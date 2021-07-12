@@ -1,9 +1,9 @@
 <h1>if you found this page by complete accident then congrats it's just a tool to add to json not upload</h1>
 <form name="modding" action="">
-    <p>Song Name: <input id="name"></p>
-    <p>Origin: <input id="origin"></p>
-    <p>Made By: <input id="madeby"></p>
-    <p>Description: <input id="desc"></p>
+    <p>Song Name: <textarea id="name" cols=50 rows=5></textarea></p>
+    <p>Origin: <textarea id="origin" cols=50 rows=5></textarea></p>
+    <p>Made By: <textarea id="madeby" cols=50 rows=5></textarea></p>
+    <p>Description: <textarea id="desc" cols=50 rows=5></textarea></p>
     <p id="status"></p>
     </br>
     Output:
@@ -17,12 +17,24 @@ function thefunny(){
     .then(response => response.json())
     .then(jsonResponse => {
         var parserdata = jsonResponse; // too lazy /shrug
-        parserdata.mods.push(document.getElementById('name').value);
-        parserdata.orig.push(document.getElementById('origin').value);
-        parserdata.madeby.push(document.getElementById('madeby').value);
-        parserdata.desc.push(document.getElementById('desc').value);
+        var name = document.getElementById('name').value;
+        var origin = document.getElementById('origin').value;
+        var madeby = document.getElementById('madeby').value;
+        var desc = document.getElementById('desc').value;
+        for(var i = 0; i<name.split('\n').length; i++){
+            parserdata.mods.push(name.split("\n")[i]);
+        }
+        for(var i = 0; i<origin.split('\n').length; i++){
+            parserdata.orig.push(name.split("\n")[i]);
+        }
+        for(var i = 0; i<madeby.split('\n').length; i++){
+            parserdata.madeby.push(name.split("\n")[i]);
+        }
+        for(var i = 0; i<desc.split('\n').length; i++){
+            parserdata.desc.push(name.split("\n")[i]);
+        }
         document.getElementById('status').innerHTML = "JSON generated!";
-        document.getElementById('output').value = JSON.stringify(parserdata);
+        document.getElementById('output').value = JSON.stringify(parserdata,null, 4);
         //jqueryfunny(JSON.stringify(parserdata));
     });
 }
