@@ -30,6 +30,7 @@ interface PlayerData {
   name:string,
   ready:boolean,
   score:number
+  finished:boolean
 }
 export class BattleRoom extends Room<Stuff> {
   scorep1:number;
@@ -37,8 +38,8 @@ export class BattleRoom extends Room<Stuff> {
 
   startedGame:boolean = false;
 
-  player1:PlayerData = {name: 'guest', ready: false, score: 0};
-  player2:PlayerData = {name: 'guest', ready: false, score: 0};
+  player1:PlayerData = {name: 'guest', ready: false, score: 0, finished: false};
+  player2:PlayerData = {name: 'guest', ready: false, score: 0, finished: false};
   
   p1ready:Boolean;
   p2ready:Boolean;

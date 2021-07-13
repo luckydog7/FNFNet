@@ -14,6 +14,8 @@ export class Stuff extends Schema {
   @type("string") creatematch: string;
 
   @type("string") misc: string;
+
+  @type("string") wait: string;
   
   @type("string") userleft: string;
 
