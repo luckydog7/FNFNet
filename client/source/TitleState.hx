@@ -55,7 +55,7 @@ class TitleState extends MusicBeatState
 		if( FlxG.save.data.pauseonunfocus != null) FlxG.autoPause = FlxG.save.data.pauseonunfocus;
 
 		#if updatecheck
-		var http = new haxe.Http("https://raw.githubusercontent.com/General-Infinity/FNFNet/client/master/version.txt");
+		var http = new haxe.Http("https://raw.githubusercontent.com/General-Infinity/FNFNet/master/client/version.txt");
 
 		http.onData = function (data:String) {
 			if(data == Application.current.meta.get('version')) outdated = false; 
@@ -83,8 +83,8 @@ class TitleState extends MusicBeatState
 		trace('NEWGROUNDS LOL');
 		#end
 
-		FlxG.save.bind('funkin', 'ninjamuffin99');
-
+		FlxG.save.bind('fnfnet', 'ninjamuffin99');
+		Config.initsave();
 		Highscore.load();
 
 		if (FlxG.save.data.weekUnlocked != null)
@@ -430,15 +430,16 @@ class TitleState extends MusicBeatState
 			// credTextShit.text = "Friday";
 			// credTextShit.screenCenter();
 			case 13:
-				addMoreText('The');
+				addMoreText('Friday');
 			// credTextShit.visible = true;
 			case 14:
-				addMoreText('Troll');
+				addMoreText('Night');
 			// credTextShit.text += '\nNight';
 			case 15:
-				addMoreText('Engine'); // credTextShit.text += '\nFunkin';
-
+				addMoreText('Funkin'); // credTextShit.text += '\nFunkin';
 			case 16:
+				addMoreText('Network');
+			case 17:
 				skipIntro();
 		}
 	}

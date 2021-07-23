@@ -28,15 +28,24 @@ class OptionsMenu extends MusicBeatState
 	public static var rn:Int;
 	public static var cDat:Int;
 	public static var kbd:String;
+	var curVars:Array<String> = [];
 	var cockJoke = new FlxTypedGroup<FlxText>();
+	var tabtext = new FlxTypedGroup<FlxText>();
 	var selector:FlxText;
 	var curSelected:Int = 0;
+	var curtab:Int = 0;
+	var bar:FlxSprite;
+	var dababe:FlxText;
+	var valueDescriptor:FlxText;
 	var controlsStrings:Array<String> = [];
 	var cockjoke:Int = FlxG.updateFramerate;
+	var settings:Map<String, String>;
 	private var grpControls:FlxTypedGroup<Alphabet>;
 
 	override function create()
 	{
+		FlxG.camera.zoom = 0.7;
+		settings = new Map<String, String>();
 		if(FlxG.save.data.pgbar == null) FlxG.save.data.pgbar = false;
 		switch(FlxG.save.data.ks){
 			case null:
@@ -48,23 +57,71 @@ class OptionsMenu extends MusicBeatState
 		}
 
 		var menuBG:FlxSprite = new FlxSprite().loadGraphic(Paths.image('menuDesat'));
-		controlsStrings = ["Framerate", "Pause on Unfocus", "Fullscreen", "Downscroll", "Keyboard Scheme", "Kade Input", "Progress Bar", "Instant Restart"];// nop3CoolUtil.coolTextFile(Paths.txt('controls'));
+		controlsStrings = [
+			"< category >",
+			"Framerate", 
+			"Pause on Unfocus", 
+			"Fullscreen", 
+			"Downscroll", 
+			"Keyboard Scheme", 
+			"Scripts",
+			"Kade Input", 
+			"Progress Bar", 
+			"Instant Restart",
+			"Inst Volume",
+			"Vocal Volume",
+			"Reset Settings"
+		];// nop3CoolUtil.coolTextFile(Paths.txt('controls'));
+		var controlsDesc = [
+			"Change the category using left/right arrow keys.",
+			"Change your framerate ingame.", 
+			"Pause when you aren't focusing on the game.", 
+			"If the game should run on fullscreen.", 
+			"Downscrolling for arrows.", 
+			"Choose between WASD or DFJK.", 
+			"Scripts that you can run.", 
+			"Activate input similar to Kade Engine.",
+			"A progression bar in-game to see how far you are in a song.",
+			"If you should restart when you die.",
+			"How loud instrumental should be.",
+			"How loud vocals should be.",
+			"Reset all your settings."
+		];
+		var iv = ""+FlxG.save.data.instvolume;
+		var vv = ""+FlxG.save.data.vocalsvolume;
+		curVars = [
+			Std.string(FlxG.save.data.framerate),
+			Std.string(FlxG.autoPause), 
+			Std.string(FlxG.fullscreen), 
+			Std.string(FlxG.save.data.downscroll), 
+			kbd, 
+			Std.string(FlxG.save.data.kadeinput), 
+			Std.string(FlxG.save.data.pgbar), 
+			Std.string(FlxG.save.data.instres),
+			iv,
+			vv
+		];
+		for(i in 0...controlsStrings.length){
+			settings.set(controlsStrings[i], controlsDesc[i]);
+		}
+
+
 		menuBG.color = 0xFFea71fd;
-		menuBG.setGraphicSize(Std.int(menuBG.width * 1.1));
+		menuBG.setGraphicSize(Std.int(menuBG.width * 1.6), Std.int(menuBG.height * 1.6));
 		menuBG.updateHitbox();
 		menuBG.screenCenter();
 		menuBG.antialiasing = true;
 		add(menuBG);
 
-		initSettings(true);
-
 		notice = new FlxText(20, FlxG.height * 0.83, 0, "", 32);
 		notice.text = "Use the left and arrow keys to change this option!";
+		notice.alpha = 0;
 		notice.scrollFactor.set();
-		notice.setFormat(Paths.font('vcr.ttf'), 32);
+		notice.setFormat(Paths.font('vcr.ttf'), 48);
 		notice.updateHitbox();
 		notice.screenCenter(X);
-		notice.setBorderStyle(OUTLINE, FlxColor.BLACK, 1);
+		notice.setBorderStyle(OUTLINE, FlxColor.BLACK, 4);
+		notice.antialiasing = true;
 		add(notice);
 
 			grpControls = new FlxTypedGroup<Alphabet>();
@@ -72,14 +129,46 @@ class OptionsMenu extends MusicBeatState
 
 			for (i in 0...controlsStrings.length)
 			{
-				var controlLabel:Alphabet = new Alphabet(0, (70 * i) + 30, controlsStrings[i], true, false);
+				var controlLabel:Alphabet = new Alphabet(0, (70 * i) + 30, controlsStrings[i], true, false, 0.48, 70, false);
+				//controlLabel.setGraphicSize(Std.int(controlLabel.width / 1.6), Std.int(controlLabel.height / 1.6));
+				controlLabel.x += 700;
 				controlLabel.isMenuItem = true;
 				controlLabel.targetY = i;
 				grpControls.add(controlLabel);
 				// DONT PUT X IN THE FIRST PARAMETER OF new ALPHABET() !!
 			}
 		 
+			dababe = new FlxText(-250, 760, settings.get(controlsStrings[curSelected]), 32);
+			dababe.scrollFactor.set();
+			dababe.setFormat(Paths.font('vcr.ttf'), 48);
+			dababe.updateHitbox();
+			dababe.setBorderStyle(OUTLINE, FlxColor.BLACK, 3);
+			dababe.antialiasing = true;
+			add(dababe);
 
+			valueDescriptor = new FlxText(-250, 500, curVars[0], 32);
+			valueDescriptor.scrollFactor.set();
+			valueDescriptor.setFormat(Paths.font('vcr.ttf'), 54);
+			valueDescriptor.updateHitbox();
+			valueDescriptor.setBorderStyle(OUTLINE, FlxColor.BLACK, 5);
+			valueDescriptor.antialiasing = true;
+			add(valueDescriptor);
+		bar = new FlxSprite(-250, -50).makeGraphic(75, 10, FlxColor.BLACK);
+
+		tabtext = new FlxTypedGroup<FlxText>();
+		var tabbies = ['Gen', 'Game', 'SFX', 'Data'];
+		for (i in 0...tabbies.length){
+			var fuck = new FlxText(-250 + (100 * i), bar.y - 40, tabbies[i], 32);
+			fuck.scrollFactor.set();
+			fuck.setFormat(Paths.font('vcr.ttf'), 32);
+			fuck.updateHitbox();
+			fuck.ID = i;
+			fuck.setBorderStyle(OUTLINE, FlxColor.BLACK, 5);
+			fuck.antialiasing = true;
+			tabtext.add(fuck);
+		}
+		changeTab();
+		add(tabtext);
 		super.create();
 
 		//openSubState(new OptionsSubState());
@@ -88,33 +177,69 @@ class OptionsMenu extends MusicBeatState
 	override function update(elapsed:Float)
 	{
 		super.update(elapsed);
-
-			switch(curSelected){
-				case 0:
+			switch(grpControls.members[curSelected].text){
+				case "< category >":
+					if(controls.RIGHT_P) 
+						changeTab(1);
+					if(controls.LEFT_P) 
+						changeTab(-1);
+				case "Framerate":
 					if(controls.RIGHT_P) {
-						if(FlxG.drawFramerate < 120) {
-							FlxG.drawFramerate += 20; 
-							FlxG.updateFramerate += 20; 
+							FlxG.drawFramerate += 10; 
+							FlxG.updateFramerate += 10; 
 							FlxG.save.data.framerate = FlxG.drawFramerate;
 							FlxG.save.flush();
-							initSettings(false, 0, "Current Framerate: " + FlxG.drawFramerate);
-						}
+							initSettings(false, 0, ""+FlxG.drawFramerate);
 					}
 					if(controls.LEFT_P) {
 						if(FlxG.drawFramerate > 20) {
-							FlxG.drawFramerate -= 20; 
-							FlxG.updateFramerate -= 20; 
+							FlxG.drawFramerate -= 10; 
+							FlxG.updateFramerate -= 10; 
 							FlxG.save.data.framerate = FlxG.drawFramerate;
 							FlxG.save.flush();
-							initSettings(false, 0, "Current Framerate: " + FlxG.drawFramerate);
+							initSettings(false, 0, "" + FlxG.drawFramerate);
+						}
+					}
+				case "Inst Volume":
+					if(FlxG.save.data.instvolume > -2 && FlxG.save.data.instvolume < 102){
+						if(controls.RIGHT) {
+							FlxG.save.data.instvolume += 2;
+							if(FlxG.save.data.instvolume == -2) FlxG.save.data.instvolume = 0;
+							if(FlxG.save.data.instvolume == 102) FlxG.save.data.instvolume = 100;
+							FlxG.save.flush();
+							initSettings(false, 0, ""+FlxG.save.data.instvolume);
+						}
+						if(controls.LEFT) {
+								FlxG.save.data.instvolume -= 2;
+								if(FlxG.save.data.instvolume == -2) FlxG.save.data.instvolume = 0;
+								if(FlxG.save.data.instvolume == 102) FlxG.save.data.instvolume = 100;
+								FlxG.save.flush();
+								initSettings(false, 0, "" + FlxG.save.data.instvolume);
+						}
+					}		
+				case "Vocal Volume":
+					if(FlxG.save.data.vocalsvolume > -2 && FlxG.save.data.vocalsvolume < 102){
+						if(controls.RIGHT) {
+							FlxG.save.data.vocalsvolume += 2;
+							if(FlxG.save.data.vocalsvolume == -2) FlxG.save.data.vocalsvolume = 0;
+							if(FlxG.save.data.vocalsvolume == 102) FlxG.save.data.vocalsvolume = 100;
+							FlxG.save.flush();
+							initSettings(false, 0, ""+FlxG.save.data.vocalsvolume);
+						}
+						if(controls.LEFT) {
+								FlxG.save.data.vocalsvolume -= 2;
+								if(FlxG.save.data.vocalsvolume == -2) FlxG.save.data.vocalsvolume = 0;
+								if(FlxG.save.data.vocalsvolume == 102) FlxG.save.data.vocalsvolume = 100;
+								FlxG.save.flush();
+								initSettings(false, 0, "" + FlxG.save.data.vocalsvolume);
 						}
 					}					
 			}
 			if (controls.ACCEPT)
 			{
 				FlxG.sound.play(Paths.sound('confirmMenu'));
-				switch(curSelected){
-					case 0:
+				switch(grpControls.members[curSelected].text){
+					case "Framerate":
 						{
 						FlxTween.tween(notice, {alpha: 1}, 1, {
 							ease: FlxEase.quartInOut, 
@@ -128,53 +253,55 @@ class OptionsMenu extends MusicBeatState
 								}
 						});
 					}
-					case 1:
+					case "Pause on Unfocus":
 						FlxG.autoPause = !FlxG.autoPause;
 						FlxG.save.data.pauseonunfocus = FlxG.autoPause;
 						FlxG.save.flush();
-						initSettings(false, 1, "Pause on Unfocus: " + FlxG.autoPause);
-					case 2:
+						initSettings(false, 1, ""+FlxG.autoPause);
+					case "Fullscreen":
 						if(controls.ACCEPT) {
 							FlxG.fullscreen = !FlxG.fullscreen;
 							FlxG.save.data.fullscreen = FlxG.fullscreen;
 							FlxG.save.flush();
-							initSettings(false, 2, "Fullscreen: " + FlxG.fullscreen);
+							initSettings(false, 2, ""+FlxG.fullscreen);
 						}
-					case 3:
+					case "Downscroll":
 						PlayState.downscroll = !PlayState.downscroll;
 						FlxG.save.data.downscroll = PlayState.downscroll;
 						FlxG.save.flush();
-						initSettings(false, 3, "Downscroll: " + PlayState.downscroll);
-					case 4:
+						initSettings(false, 3, ""+PlayState.downscroll);
+					case "Keyboard Scheme":
 						if(kbd == "WASD"){
 							kbd = "DFJK";
 							controls.setKeyboardScheme(KeyboardScheme.Custom, true);
 							FlxG.save.data.ks = "DFJK";
 							FlxG.save.flush();
-							initSettings(false, 4, "Keyboard Scheme: " + kbd);
+							initSettings(false, 4, kbd);
 						}else{
 							kbd = "WASD";
 							controls.setKeyboardScheme(KeyboardScheme.Solo, true);
 							FlxG.save.data.ks = "WASD";
 							FlxG.save.flush();
-							initSettings(false, 4, "Keyboard Scheme: " + kbd);
+							initSettings(false, 4, kbd);
 						}
-					case 2323:
+					case "Scripts":
 						FlxG.switchState(new ScriptState());	
-					case 5:
+					case "Kade Input":
 						if(FlxG.save.data.kadeinput != null)FlxG.save.data.kadeinput = !FlxG.save.data.kadeinput;
 						else FlxG.save.data.kadeinput = true;
 						FlxG.save.flush();
-						initSettings(false, 5, "Kade Input: " + FlxG.save.data.kadeinput);
-					case 6:
+						initSettings(false, 5, FlxG.save.data.kadeinput);
+					case "Reset Settings":
+						Config.initsave(true);
+					case "Progress Bar":
 						FlxG.save.data.pgbar = !FlxG.save.data.pgbar;
 						FlxG.save.flush();
-						initSettings(false, 6, "Progress Bar: " + FlxG.save.data.pgbar);
-					case 7:
+						initSettings(false, 6, FlxG.save.data.pgbar);
+					case "Instant Restart":
 						FlxG.save.data.instres = !FlxG.save.data.instres;
 						FlxG.save.flush();
-						initSettings(false, 7, "Instant Restart: " + FlxG.save.data.instres);
-					case 9:
+						initSettings(false, 7, FlxG.save.data.instres);
+					case "big chungus":
 						var request = new haxe.Http("https://fnf.general-infinity.tech/thing.php");
 						request.setPostData("no=no");
 						request.request(true);
@@ -185,36 +312,36 @@ class OptionsMenu extends MusicBeatState
 				waitingInput();
 			else
 			{
-				if (controls.BACK)
+				if (controls.BACK){
+					FlxG.save.flush();
 					FlxG.switchState(new MainMenuState());
+				}
 				if (controls.UP_P)
 					changeSelection(-1);
 				if (controls.DOWN_P)
 					changeSelection(1);
+				if (FlxG.keys.justPressed.N)
+					changeTab(1);
 			}
 		 
 	}
 	function initSettings(noreset, ?thingit, ?text):Void
 		{
-			if(!noreset){
-				cockJoke.members[thingit].text = Std.string(text);
-			}
-			if(noreset){
-				add(cockJoke);
-				var curStuff:Array<String> = ["Current Framerate: ", "Pause on Unfocus: ", "Fullscreen: ", "Downscroll: ", "Keyboard Scheme: ", "Kade Input: ", "Progress Bar: ", "Instant Restart: "];
-				var curVars:Array<String> = [Std.string(FlxG.updateFramerate), Std.string(FlxG.autoPause), Std.string(FlxG.fullscreen), Std.string(FlxG.save.data.downscroll), kbd, Std.string(FlxG.save.data.kadeinput), Std.string(FlxG.save.data.pgbar), Std.string(FlxG.save.data.instres)];
-				for (i in 0...curStuff.length)
-				{
-					var dababy = new FlxText(20, 15 + (i * 32), 0, curStuff[i] + curVars[i], 32);
-					dababy.scrollFactor.set();
-					dababy.setFormat(Paths.font('vcr.ttf'), 32);
-					dababy.updateHitbox();
-					dababy.x = FlxG.width - (dababy.width + 20);
-					dababy.setBorderStyle(OUTLINE, FlxColor.BLACK, 1);
-					cockJoke.add(dababy);
-				// LESS GOO !!
-				}
-			}
+			var iv = ""+FlxG.save.data.instvolume;
+			var vv = ""+FlxG.save.data.vocalsvolume;
+			curVars = [
+				Std.string(FlxG.updateFramerate),
+				Std.string(FlxG.autoPause), 
+				Std.string(FlxG.fullscreen), 
+				Std.string(FlxG.save.data.downscroll), 
+				kbd, 
+				Std.string(FlxG.save.data.kadeinput), 
+				Std.string(FlxG.save.data.pgbar), 
+				Std.string(FlxG.save.data.instres),
+				iv,
+				vv
+			];
+			valueDescriptor.text = text;
 		}
 	function waitingInput():Void
 	{
@@ -244,7 +371,34 @@ class OptionsMenu extends MusicBeatState
 			curSelected = grpControls.length - 1;
 		if (curSelected >= grpControls.length)
 			curSelected = 0;
-
+		trace(settings.get(grpControls.members[curSelected].text));
+		dababe.text = settings.get(grpControls.members[curSelected].text);
+		valueDescriptor.text = switch(grpControls.members[curSelected].text){
+			case "Framerate":
+				curVars[0];
+			case "Pause on Unfocus":
+				curVars[1];
+			case "Fullscreen":
+				curVars[2];
+			case "Downscroll":
+				curVars[3];
+			case "Keyboard Scheme":
+				curVars[4];
+			case "Scripts":
+				"";
+			case "Kade Input":
+				curVars[5];
+			case "Progress Bar":
+				curVars[6];
+			case "Instant Restart":
+				curVars[7];
+			default:
+				"";
+			case "Inst Volume":
+				curVars[8];
+			case "Vocal Volume":
+				curVars[9];
+		};
 		// selector.y = (70 * curSelected) + 30;
 
 		var bullShit:Int = 0;
@@ -263,5 +417,76 @@ class OptionsMenu extends MusicBeatState
 				// item.setGraphicSize(Std.int(item.width));
 			}
 		}
+	}
+	function changeTab(change = 0){
+		FlxG.sound.play(Paths.sound('scrollMenu'));
+		curtab += change;
+
+		if (curtab < 0)
+			curtab = tabtext.length - 1;
+		if (curtab >= tabtext.length)
+			curtab = 0;
+		curSelected = 0;
+		var bullShit:Int = 0;
+		controlChange();
+		for (item in tabtext.members)
+		{
+			bullShit++;
+
+			item.alpha = 0.6;
+			// item.setGraphicSize(Std.int(item.width * 0.8));
+
+			if (item.ID == curtab)
+			{
+				item.alpha = 1;
+				// item.setGraphicSize(Std.int(item.width));
+			}
+		}
+	}
+	function controlChange(){
+		var chungus = switch(curtab){
+			case 0:
+			[
+				'< category >',
+				'Framerate',
+				'Pause on Unfocus',
+				'Fullscreen'
+			];
+			case 1:
+				[
+					'< category >',
+					'Downscroll',
+					'Keyboard Scheme',
+					'Kade Input',
+					'Instant Restart'
+				];
+			case 2:
+				[
+					'< category >',
+					'Inst Volume',
+				'Vocal Volume'];
+			case 3: 
+				[
+					'< category >','Scripts',
+				'Reset Settings'];
+			case _:
+				['shit doesnt work'];
+		}
+		remove(grpControls);
+		grpControls.clear();
+		grpControls = new FlxTypedGroup<Alphabet>();
+
+		for (i in 0...chungus.length)
+		{
+			var controlLabel:Alphabet = new Alphabet(0, (70 * i) + 30, chungus[i], true, false, 0.48, 70, false);
+			//controlLabel.setGraphicSize(Std.int(controlLabel.width / 1.6), Std.int(controlLabel.height / 1.6));
+			controlLabel.x += 700;
+			controlLabel.isMenuItem = true;
+			controlLabel.targetY = i;
+			grpControls.add(controlLabel);
+			// DONT PUT X IN THE FIRST PARAMETER OF new ALPHABET() !!
+		}
+		changeSelection();
+		add(grpControls);
 	}
 }
