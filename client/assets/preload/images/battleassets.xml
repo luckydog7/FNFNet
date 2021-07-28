@@ -18,7 +18,7 @@
 	<SubTexture name="hand0011" x="340" y="0" width="93" height="80" frameX="-15" frameY="0" frameWidth="143" frameHeight="80"/>
 	<SubTexture name="hand0012" x="340" y="0" width="93" height="80" frameX="-15" frameY="0" frameWidth="143" frameHeight="80"/>
 	<SubTexture name="hand0013" x="340" y="0" width="93" height="80" frameX="-15" frameY="0" frameWidth="143" frameHeight="80"/>
-	<SubTexture name="hand_textbox.png" x="93" y="121" width="17" height="11"/>
+	<SubTexture name="hand_textbox.png" x="495" y="101" width="17" height="11"/>
 	<SubTexture name="join from code0000" x="110" y="121" width="340" height="121"/>
 	<SubTexture name="login0000" x="0" y="242" width="340" height="121"/>
 	<SubTexture name="matchmaking0000" x="0" y="363" width="348" height="121"/>
