@@ -1,1 +1,7 @@
-{"scripts":{"install":"cd server && npm install"}}
+{
+  "_id": "FNFNet@0.1.1",
+  "scripts": {
+    "install" : "cd server && npm install"
+  },
+  "name": "FNFNet"
+}
