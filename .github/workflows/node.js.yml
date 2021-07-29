@@ -25,7 +25,14 @@ jobs:
       uses: actions/setup-node@v2
       with:
         node-version: ${{ matrix.node-version }}
-    - run: npm install --legacy-peer-deps
-    - run: npm ci --legacy-peer-deps
-    - run: npm i --legacy-peer-deps
+    - run: npm install
+    - run: npm ci
+    - run: npm i
     - run: npm run build --if-present
+    
+    - name: Failure, so output logs instead
+      if: ${{ failure() }}
+      uses: 'actions/upload-artifact@v2'
+      with:
+        name: Error logs from ${{ matrix.node-version }}
+        path: '/home/runner/.npm/_logs/*' 
