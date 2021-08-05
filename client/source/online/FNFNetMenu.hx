@@ -23,6 +23,7 @@ class FNFNetMenu extends MusicBeatState{
     var hand:FlxSprite;
     var curSelected:Int = 0;
     var jfc:FlxInputText;
+    var errortxt:Alphabet;
     var jbt:FlxButton;
     var assets:FlxTypedGroup<FlxSprite>;
 
@@ -94,7 +95,7 @@ class FNFNetMenu extends MusicBeatState{
             add(assets);   
             add(logo);
             add(hand);
-            var errortxt = new Alphabet(0, FlxG.height * 0.90, error, true);
+            errortxt = new Alphabet(0, FlxG.height * 0.90, error, true);
             errortxt.screenCenter(X);
             add(errortxt);
             super.create();
@@ -116,7 +117,29 @@ class FNFNetMenu extends MusicBeatState{
                     add(jfc);
                     add(jbt);
                 case 2:
-                    FlxG.switchState(new ConnectingState('battle', 'join'));
+                    coly = new Client('ws://' + Config.data.addr + ':' + Config.data.port);
+                    var exists = false;
+                    coly.getAvailableRooms("battle", function(err, rooms) {
+                        if (err != null) {
+                          trace(err);
+                          return;
+                        }
+                        remove(errortxt);
+                        errortxt = new Alphabet(0, errortxt.y, "No Rooms Found!", true);
+                        errortxt.screenCenter(X);
+                        add(errortxt);
+                        trace(rooms);
+                        for (room in rooms) {
+                            exists = true;
+                            remove(errortxt);
+                            errortxt = new Alphabet(0, errortxt.y, "Match found! Connecting", true);
+                            errortxt.screenCenter(X);
+                            add(errortxt);
+                            FlxG.switchState(new ConnectingState('battle', 'join'));
+
+                        }
+                    });
+                    //FlxG.switchState(new ConnectingState('battle', 'join'));
                 case 3:
                     FlxG.switchState(new ChatState());
                 }

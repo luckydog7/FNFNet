@@ -16,6 +16,10 @@ export class Stuff extends Schema {
   @type("string") misc: string;
 
   @type("string") wait: string;
+
+  @type("string") loaded: string;
+
+  @type("string") finished: string;
   
   @type("string") userleft: string;
 

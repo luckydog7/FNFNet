@@ -22,8 +22,8 @@ import online.ConnectingState.songmeta;
 typedef Boolean = Bool; //doing this just to piss off haya :troll:
 class LobbyState extends MusicBeatState{
     public static var rooms:Room<Stuff>;
-    var p1:Character;
-    public static var p2:Character;
+    var p1:FlxSprite;
+    public static var p2:FlxSprite;
     public static var songdata:ConnectingState.SongData = {song: '', week: 1, difficulty: 1};
     public static var roomcode:FlxText;
     public static var code:String;
@@ -35,6 +35,7 @@ class LobbyState extends MusicBeatState{
     public static var playertxt:FlxTypedGroup<FlxText>;
 
     override function create(){
+        PlayStateOnline.playedgame = false;
         var songname = songdata.song;
         var songweek = songdata.week;
         var songdiff = switch(songdata.difficulty){
@@ -63,8 +64,17 @@ class LobbyState extends MusicBeatState{
         roomcode.scrollFactor.set();
         roomcode.setFormat("VCR OSD Mono", 32, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 
-        p1 = new Character(180, 303);
+        p1 = new FlxSprite(180, 303);
+        p1.frames = Paths.getSparrowAtlas('BOYFRIEND');
+        p1.flipX = true;
+        p1.animation.addByPrefix('idle', 'BF idle dance', 24, true);
+        p1.animation.play("idle");
+
         p2 = new Character(660, 303);
+        p2.frames = Paths.getSparrowAtlas('BOYFRIEND');
+        p2.flipX = true;
+        p2.animation.addByPrefix('idle', 'BF idle dance', 24, true);
+        p2.animation.play("idle");
         p2.alpha = 0;
         if(ConnectingState.conmode == 'join')p2.alpha = 1;
         p1name = new FlxText(p1.x + 100, p1.y - 30);
@@ -180,7 +190,7 @@ class LobbyState extends MusicBeatState{
         if(PlayStateOnline.startedMatch){
             LoadingOnline.loadAndSwitchState(new PlayStateOnline());
         }
-        if(controls.BACK) {
+        if(FlxG.keys.justPressed.ESCAPE) {
             rooms.leave();
             FlxG.switchState(new FNFNetMenu());
         }

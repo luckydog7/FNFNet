@@ -60,6 +60,7 @@ class PlayStateOnline extends MusicBeatState
 	public static var modvoices:Sound;
 	public static var rooms:Room<Stuff>;
 	public static var gimmick:Bool = false;
+	public static var otherfinished:Bool = false;
 	public static var connected:Bool = false;
 	public static var missedNotes:Int;
 	public static var downscroll:Bool = false;
@@ -112,6 +113,7 @@ class PlayStateOnline extends MusicBeatState
 	private var startingSong:Bool = false;
 
 	public static var p1score:Int = 0;
+	public static var playedgame:Bool = false;
 	public static var p2score:Int = 0;
 	public static var roomcode:FlxText;
 
@@ -640,12 +642,13 @@ class PlayStateOnline extends MusicBeatState
 		if(!ConnectingState.modded)dad = new Character(100, 100, SONG.player2, false);
 		else dad = new Character(100, 100, 'dad', false);
 
-		onlinemodetext = new FlxText(0, 0, 0, "Waiting for another player... (1/2)", 60);
+		onlinemodetext = new FlxText(0, 0, 0, "Waiting for other player...", 60);
 		onlinemodetext.screenCenter(XY);
 		onlinemodetext.cameras = [camHUD];
 
 		onlinemodetext.setFormat(Paths.font("vcr.ttf"), 60, FlxColor.WHITE, RIGHT);
-		onlinemodetext.setBorderStyle(OUTLINE, FlxColor.BLACK, 1);
+		onlinemodetext.setBorderStyle(OUTLINE, FlxColor.BLACK, 3);
+		onlinemodetext.antialiasing = true;
 
 		leftText = new FlxText(0, 30, 0, "", 60);
 		leftText.screenCenter(XY);
@@ -893,8 +896,8 @@ class PlayStateOnline extends MusicBeatState
 			roomcode.scrollFactor.set();
 			roomcode.setFormat("VCR OSD Mono", 32, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 			roomcode.cameras = [camHUD];
-			add(roomcode);
 		add(leftText);
+		rooms.send("loaded");
 		super.create();
 	}
 
@@ -946,7 +949,7 @@ class PlayStateOnline extends MusicBeatState
 	function startCountdown():Void
 	{
 		inCutscene = false;
-
+		playedgame = true;
 		generateStaticArrows(0);
 		generateStaticArrows(1);
 
@@ -1399,6 +1402,11 @@ class PlayStateOnline extends MusicBeatState
 			startCountdown();
 			assing = false;
 		}
+		if(otherfinished) {
+			otherfinished = false;
+			remove(onlinemodetext);
+			openSubState(new online.BattleResultSubState(boyfriend.getScreenPosition().x, boyfriend.getScreenPosition().y));
+		}
 		currentBeat = curBeat;
 		#if !debug
 		perfectMode = false;
@@ -1710,17 +1718,15 @@ class PlayStateOnline extends MusicBeatState
 
 		if (!inCutscene)
 			keyShit();
-
-		#if debug
-		if (FlxG.keys.justPressed.ONE)
-			endSong();
-		#end
 	}
 
 	public function endSong():Void
 	{
 		startedMatch = false;
-        rooms.leave();
+		onlinemodetext.text = "Waiting for other player to finish...";
+		onlinemodetext.screenCenter(XY);
+		add(onlinemodetext);
+        //rooms.leave();
 
 		canPause = false;
 		FlxG.sound.music.volume = 0;
@@ -1733,9 +1739,8 @@ class PlayStateOnline extends MusicBeatState
 
 		vocals.stop();
 		FlxG.sound.music.stop();
-
-		openSubState(new online.BattleResultSubState(boyfriend.getScreenPosition().x, boyfriend.getScreenPosition().y));
-
+		rooms.send("finished");
+		//openSubState(new online.BattleResultSubState(boyfriend.getScreenPosition().x, boyfriend.getScreenPosition().y));
 	}
 
 	var endingSong:Bool = false;

@@ -15,6 +15,7 @@ import online.PlayStateOnline.p1score;
 import online.PlayStateOnline.p2score;
 import online.ConnectingState.p1name;
 import online.ConnectingState.p2name;
+import online.PlayStateOnline.rooms;
 class BattleResultSubState extends MusicBeatSubstate
 {
 	var bf:Boyfriend;
@@ -109,6 +110,7 @@ class BattleResultSubState extends MusicBeatSubstate
 		if (controls.ACCEPT)
 		{
 			FlxG.sound.music.stop();
+			rooms.leave();
 			FlxG.switchState(new online.FNFNetMenu());
 		}
 

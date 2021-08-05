@@ -114,7 +114,12 @@ class ConnectingState extends MusicBeatState {
                                 add(PlayStateOnline.p2scoretext);
                                 //new PlayStateOnline().starts();
                                 ConnectingState.inlobby = false;
+                            });
+                            room.onMessage('loaded', function(message){
                                 PlayStateOnline.assing = true;
+                            });
+                            room.onMessage('finished', function(message){
+                                PlayStateOnline.otherfinished = true;
                             });
                             room.onMessage('userjoin', function(message){
                                 LobbyState.p2.alpha = 1;
@@ -152,6 +157,7 @@ class ConnectingState extends MusicBeatState {
                                 FlxG.switchState(new FNFNetMenu("Could not find a room"));
                                 return;
                             }
+                            rooms = room;
                             LobbyState.rooms = room;
                             PlayStateOnline.rooms = room;
                             room.send('recvprev', {name: p2name});
@@ -159,8 +165,13 @@ class ConnectingState extends MusicBeatState {
                                 LoadingOnline.loadAndSwitchState(new PlayStateOnline());
                                 PlayStateOnline.startedMatch = true;
                                 //new PlayStateOnline().starts();
-                                PlayStateOnline.assing = true;
                                 ConnectingState.inlobby = false;
+                            });
+                            room.onMessage('loaded', function(message){
+                                PlayStateOnline.assing = true;
+                            });
+                            room.onMessage('finished', function(message){
+                                PlayStateOnline.otherfinished = true;
                             });
                             room.onError += function(code, message) {
                                 FlxG.switchState(new FNFNetMenu("A strange error occured"));
@@ -186,11 +197,11 @@ class ConnectingState extends MusicBeatState {
                             room.onMessage('userleft', function(message){
                                 LobbyState.p2.alpha = 0;
                                 if(PlayStateOnline.startedMatch) PlayStateOnline.leftText.text = "User left the game.";
-                                if(!PlayStateOnline.startedMatch){
+                                if(!PlayStateOnline.playedgame){
                                     FlxG.switchState(new FNFNetMenu());
                                     p2name = '';
                                 }
-                                if(!PlayStateOnline.startedMatch)LobbyState.playertxt.members[1].applyMarkup("/r/Not Ready/r/", [new FlxTextFormatMarkerPair(new FlxTextFormat(FlxColor.RED), "/r/")]);
+                                if(!PlayStateOnline.playedgame)LobbyState.playertxt.members[1].applyMarkup("/r/Not Ready/r/", [new FlxTextFormatMarkerPair(new FlxTextFormat(FlxColor.RED), "/r/")]);
                             });
                             room.onMessage("message", function(message){
                                 p1name = message.p1name;
@@ -210,11 +221,20 @@ class ConnectingState extends MusicBeatState {
                                 trace(nmsongs.contains(message.song));
                                 if(!nmsongs.contains(message.song)){
                                     modded = true;
-                                    loadprog = new Alphabet(loadprog.x, loadprog.y, "Loading Instrumental...");
+                                    remove(loadprog);
+                                    loadprog = new Alphabet(0, 0, "Loading Instrumental...", true);
+                                    loadprog.screenCenter(XY);
+                                    add(loadprog);
                                     PlayStateOnline.modinst = new Sound(new URLRequest('http://'+data.resourceaddr+'/songs/$sng/Inst.ogg'));
-                                    loadprog = new Alphabet(loadprog.x, loadprog.y, "Loading Voices...");
+                                    remove(loadprog);
+                                    loadprog = new Alphabet(0, 0, "Loading Voices...", true);
+                                    loadprog.screenCenter(XY);
+                                    add(loadprog);
                                     PlayStateOnline.modvoices = new Sound(new URLRequest('http://'+data.resourceaddr+'/songs/$sng/Voices.ogg'));
-                                    loadprog = new Alphabet(loadprog.x, loadprog.y, "Loading Chart...");
+                                    remove(loadprog);
+                                    loadprog = new Alphabet(0, 0, "Loading Chart...", true);
+                                    loadprog.screenCenter(XY);
+                                    add(loadprog);
                                     var http = new haxe.Http('http://'+data.resourceaddr+'/songs/$sng/chart$modif.json');
                     
                                     http.onData = function (data:String) {
@@ -225,7 +245,10 @@ class ConnectingState extends MusicBeatState {
                             
                                         PlayStateOnline.storyWeek = message.week;
                                         LobbyState.songdata.difficulty = PlayStateOnline.storyDifficulty;
-                                        loadprog = new Alphabet(loadprog.x, loadprog.y, "All Done!");
+                                        remove(loadprog);
+                                        loadprog = new Alphabet(0, 0, "All Done!", true);
+                                        loadprog.screenCenter(XY);
+                                        add(loadprog);
                                         LoadingOnline.loadAndSwitchState(new LobbyState());
                                     }
                                     http.request();
@@ -391,7 +414,7 @@ class ConnectingState extends MusicBeatState {
 		motherfunkers.screenCenter(Y);
 		loading.x += FlxG.width * 0.14;
 		motherfunkers.x -= FlxG.width * 0.14;
-        loadprog = new Alphabet(0, 0, "Loading...");
+        loadprog = new Alphabet(0, 0, "Loading...", true);
         loadprog.screenCenter(XY);
 		motherfunkers.antialiasing = true;
 		loading.antialiasing = true;
@@ -403,6 +426,10 @@ class ConnectingState extends MusicBeatState {
         super.create();
     }
     override function update(elapsed:Float){
+        if(FlxG.keys.justPressed.ESCAPE){
+            rooms.leave();
+            FlxG.switchState(new FNFNetMenu());
+        }
         super.update(elapsed);
     }
 }

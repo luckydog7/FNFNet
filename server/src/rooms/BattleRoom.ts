@@ -1,7 +1,10 @@
 import { Room, Client, matchMaker } from "colyseus";
 import { Stuff } from "./schema/Stuff";
 import * as readline from 'readline';
-
+import { discord } from "../modules/discord";
+import * as fs from 'fs';
+var config = JSON.parse(fs.readFileSync("config.json", "utf-8"));
+const dsc = new discord;
 let rl = readline.createInterface({
     input: process.stdin,
     output: process.stdout
@@ -29,17 +32,18 @@ let rl = readline.createInterface({
 interface PlayerData {
   name:string,
   ready:boolean,
-  score:number
-  finished:boolean
+  score:number,
+  finished:boolean,
+  loaded:boolean
 }
 export class BattleRoom extends Room<Stuff> {
   scorep1:number;
   scorep2:number;
-
+  playedagame:boolean = false;
   startedGame:boolean = false;
 
-  player1:PlayerData = {name: 'guest', ready: false, score: 0, finished: false};
-  player2:PlayerData = {name: 'guest', ready: false, score: 0, finished: false};
+  player1:PlayerData = {name: 'guest', ready: false, score: 0, finished: false, loaded: false};
+  player2:PlayerData = {name: 'guest', ready: false, score: 0, finished: false, loaded: false};
   
   p1ready:Boolean;
   p2ready:Boolean;
@@ -51,13 +55,14 @@ export class BattleRoom extends Room<Stuff> {
   public static stuff: string;
   onCreate (options: any) {
     this.setState(new Stuff());
-    this.autoDispose = true;
+    //this.autoDispose = true;
     this.song = "";
     this.diff = 0;
     this.week = 0
     this.scorep1 = 0;
     this.scorep2 = 0;
     this.roomId = this.genID();
+    this.setPrivate(true);
     console.log(this.roomId);
     
     this.onMessage('misc', (client, message) => {
@@ -65,7 +70,8 @@ export class BattleRoom extends Room<Stuff> {
         if(client.sessionId == this.clients[0].sessionId) this.p1ready = message.ready;
         else this.p2ready = message.ready;
         if(this.p1ready && this.p2ready){
-          this.startedGame = true
+          this.startedGame = true;
+          this.playedagame = true;
           this.broadcast('start');
         }
         this.broadcast('misc', {p1: this.p1ready, p2: this.p2ready});
@@ -78,6 +84,7 @@ export class BattleRoom extends Room<Stuff> {
       this.song = message.song;
       this.diff = message.diff;
       this.week = message.week
+      this.setPrivate(false);
       try{
         client.send("creatematch", {song: message.song, diff: message.diff, week: message.week});
       }catch(err){
@@ -100,6 +107,26 @@ export class BattleRoom extends Room<Stuff> {
         this.player2.name = message.name;
       }
       this.broadcast('chatHist', {p1name: this.player1.name, p2name: this.player2.name});
+    });
+    this.onMessage('loaded', (client, message) => {
+      if(this.clients[0].sessionId == client.sessionId){
+        this.player1.loaded = true;
+      }else {
+        this.player2.loaded = true;
+      }
+      if(this.player1.loaded && this.player2.loaded){
+        this.broadcast("loaded");
+      }
+    });
+    this.onMessage('finished', (client, message) => {
+      if(this.clients[0].sessionId == client.sessionId){
+        this.player1.finished = true;
+      }else {
+        this.player2.finished = true;
+      }
+      if(this.player1.finished && this.player2.finished){
+        this.broadcast("finished");
+      }
     });
     this.onMessage("message", (client, message) => {
       if(this.startedGame){
@@ -152,15 +179,28 @@ export class BattleRoom extends Room<Stuff> {
         this.clients[i].leave();
       }
     }else{
-      this.player2.name = '';
+      if(!this.playedagame)this.player2.name = '';
       this.p2ready = false;
       this.broadcast('userleft', {})
+      if(this.startedGame)this.setPrivate(true);
+      if(this.playedagame){
+        //this.autoDispose = true;
+      }
+      else this.setPrivate(false);
       this.lock();
+      this.player2.loaded = true;
     }
+    if(this.clients.length == 0) 
     console.log("the score is: " + this.scorep1);
   }
 
   onDispose() {
+    if(this.playedagame){
+      var whowon:string = "";
+      if(this.scorep1 > this.scorep2) whowon = this.player1.name;
+      if(this.scorep2 > this.scorep1) whowon = this.player2.name;
+      dsc.battle(config.discord.battleurl, "", this.player1.name, this.player2.name, this.scorep1, this.scorep2, whowon, this.song);
+    }
     console.log("room", this.roomId, "disposing...");
   }
 

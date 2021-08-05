@@ -9,7 +9,7 @@
             "name": "HXCPP",
             "type": "hxcpp",
             "request": "launch",
-            "program": "${workspaceFolder}/client/export/debug/windows/bin/TrollEngine.exe"
+            "program": "C:/Users/ertas/Desktop/fnfnet/client/export/debug/windows/bin/FNFNet.exe"
         }
     ]
 }
