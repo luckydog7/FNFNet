@@ -185,11 +185,13 @@ class OptionsMenu extends MusicBeatState
 						changeTab(-1);
 				case "Framerate":
 					if(controls.RIGHT_P) {
+						if(FlxG.drawFramerate < 300){
 							FlxG.drawFramerate += 10; 
 							FlxG.updateFramerate += 10; 
 							FlxG.save.data.framerate = FlxG.drawFramerate;
 							FlxG.save.flush();
 							initSettings(false, 0, ""+FlxG.drawFramerate);
+						}
 					}
 					if(controls.LEFT_P) {
 						if(FlxG.drawFramerate > 20) {

@@ -129,6 +129,9 @@
 	<haxelib name="discord_rpc" if="desktop"/>
 	<haxelib name="flixel-studio" if="debug"/>
 	<!-- TOGGLES FOR COMPILATION! REMOVE ONE IF YOU DON"T WANT ONE COMPILED -->
+	<!--<haxelib name="crashdumper"/>-->
+	<!--<haxedef name="HXCPP_STACK_LINE" /> --><!--if you want line numbers-->
+	<!--<haxedef name="HXCPP_STACK_TRACE"/>  --><!--if you want stack traces-->
 
 	<haxedef name="updatecheck" /> <!-- Check for Updates -->
 	<haxedef name="fnfnet" /> <!-- FNFNet -->
