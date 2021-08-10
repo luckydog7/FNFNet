@@ -1,5 +1,10 @@
 package;
 
+import flixel.graphics.frames.FlxAtlasFrames;
+import lime.app.Future;
+import openfl.display.BitmapData;
+import openfl.net.URLLoader;
+import openfl.net.URLRequestDefaults;
 import haxe.Json;
 import haxe.Http;
 import openfl.net.URLRequest;
@@ -18,13 +23,14 @@ import flixel.text.FlxText;
 import flixel.util.FlxColor;
 import lime.utils.Assets;
 import io.colyseus.Client;
+
 import io.colyseus.Room;
 import Controls.*;
 
 using StringTools;
-
 class FreeplayState extends MusicBeatSubstate
 {
+	public static var songname:String;
 	var modtxt:FlxText;
 	var modlist:ModMetaa = {mods: ['shits not right'], orig: ['TrollEngine'], madeby: ['bit of trolling'], desc: ['your shit doesnt work fix ASAP!']};
 	public static var bruh:Bool = false;
@@ -242,8 +248,12 @@ class FreeplayState extends MusicBeatSubstate
 		{
 				trace(songs[curSelected].songName.toLowerCase());
 				add(loadingtxt);
-				PlayState.modinst = new Sound(new URLRequest('http://'+Config.data.resourceaddr+'/songs/'+songs[curSelected].songName.toLowerCase()+'/Inst.ogg'));
-				PlayState.modvoices = new Sound(new URLRequest('http://'+Config.data.resourceaddr+'/songs/'+songs[curSelected].songName.toLowerCase()+'/Voices.ogg'));
+				URLRequestDefaults.idleTimeout = 300000;
+				var inststream = new URLRequest('http://'+Config.data.resourceaddr+'/songs/'+songs[curSelected].songName.toLowerCase()+'/Inst.ogg');
+				var voicestream = new URLRequest('http://'+Config.data.resourceaddr+'/songs/'+songs[curSelected].songName.toLowerCase()+'/Voices.ogg');
+				voicestream.idleTimeout = 30;
+				PlayState.modinst = new Sound(inststream);
+				PlayState.modvoices = new Sound(voicestream);
 				var modif = switch(curDifficulty){
 					case 0:
 						"-easy";
@@ -253,7 +263,7 @@ class FreeplayState extends MusicBeatSubstate
 						"-hard";
 				}
 				var http = new haxe.Http('http://'+Config.data.resourceaddr+'/songs/'+songs[curSelected].songName.toLowerCase()+'/chart$modif.json');
-
+				songname = songs[curSelected].songName.toLowerCase();
 				http.onData = function (data:String) {
 					PlayState.SONG = Song.loadFromJson(data, songs[curSelected].songName.toLowerCase(), true);
 					PlayState.isStoryMode = false;
@@ -261,7 +271,7 @@ class FreeplayState extends MusicBeatSubstate
 		
 					PlayState.storyWeek = songs[curSelected].week;
 					//LoadingOnline.loadAndSwitchState(new PlayStateOnline());
-                    LoadingState.loadAndSwitchState(new PlayState());
+					LoadingState.loadAndSwitchState(new PlayState());
 				}
 
 				http.onError = function (error) {

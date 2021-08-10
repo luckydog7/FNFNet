@@ -1,5 +1,8 @@
 package;
 
+import openfl.net.URLRequest;
+import lime.app.Future;
+import openfl.display.BitmapData;
 #if desktop
 import sys.io.File;
 import Discord.DiscordClient;
@@ -27,7 +30,8 @@ class MainMenuState extends MusicBeatState
 	var menuItems:FlxTypedGroup<FlxSprite>;
 
 	var optionShit:Array<String> = ['fnfnet', 'freeplay', 'options'];
-
+	public static var exemel:String;
+	public static var char:BitmapData;
 	var magenta:FlxSprite;
 	var camFollow:FlxObject;
 	override function create()
@@ -132,7 +136,7 @@ class MainMenuState extends MusicBeatState
 		// NG.core.calls.event.logEvent('swag').send();
 
 		changeItem();
-
+		
 		super.create();
 	}
 

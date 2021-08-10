@@ -1,7 +1,9 @@
 package;
 
+#if crashdumper
 import crashdumper.CrashDumper;
 import crashdumper.SessionData;
+#end
 import polymod.Polymod.Framework;
 import lime.utils.AssetCache;
 import Controls;
@@ -37,7 +39,6 @@ import lime.app.Application;
 import lime.utils.Assets;
 import Controls.KeyboardScheme;
 using StringTools;
-
 class TitleState extends MusicBeatState
 {
 	static var initialized:Bool = false;
@@ -49,16 +50,17 @@ class TitleState extends MusicBeatState
 	var textGroup:FlxGroup;
 	var ngSpr:FlxSprite;
 	var curWacky:Array<String> = [];
-
 	var wackyImage:FlxSprite;
 
 	override public function create():Void
 	{
 		if( FlxG.save.data.pauseonunfocus != null) FlxG.autoPause = FlxG.save.data.pauseonunfocus;
+		#if crashdumper
 		var unique_id:String = SessionData.generateID("FNFNet_"); 
 		//generates unique id: "fooApp_YYYY-MM-DD_HH'MM'SS_CRASH"
 		
 		var crashDumper = new CrashDumper(unique_id, "crashlogs");
+		#end
 		#if updatecheck
 		var http = new haxe.Http("https://raw.githubusercontent.com/General-Infinity/FNFNet/master/client/version.txt");
 
@@ -124,6 +126,7 @@ class TitleState extends MusicBeatState
 			DiscordClient.shutdown();
 		 });
 		#end
+		//Application.current.onWindowMove((x:Float, y:Float) -> {});
 
 		#if debug
 		flixel.addons.studio.FlxStudio.create();

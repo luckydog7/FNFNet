@@ -1,5 +1,6 @@
 package;
 
+import flixel.util.typeLimit.OneOfTwo;
 import openfl.media.Sound;
 import openfl.utils.AssetCache;
 import flixel.util.FlxSave;
@@ -70,7 +71,7 @@ class PlayState extends MusicBeatState
 	var pressedNotes:Int = 0;
 	var grade:String = "NCY";
 	var gradetxt:FlxText;
-	private var dad:Character;
+	private var dad:DadCharacter;
 	private var gf:Character;
 	public var boyfriend:Boyfriend;
 	private var notes:FlxTypedGroup<Note>;
@@ -595,8 +596,8 @@ class PlayState extends MusicBeatState
 
 		gf = new Character(400, 130, gfVersion);
 		gf.scrollFactor.set(0.95, 0.95);
-
-		dad = new Character(100, 100, "dad", false);
+		trace(MainMenuState.exemel);
+		dad = new online.CharacterOnline(100, 100, "dad", false, tex);
 
 		var camPos:FlxPoint = new FlxPoint(dad.getGraphicMidpoint().x, dad.getGraphicMidpoint().y);
 

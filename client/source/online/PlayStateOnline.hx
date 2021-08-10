@@ -1,5 +1,6 @@
 package online;
 
+import flixel.util.typeLimit.OneOfTwo;
 import openfl.net.URLRequest;
 import openfl.media.Sound;
 import flixel.util.FlxSave;
@@ -52,6 +53,8 @@ import io.colyseus.Room;
 import Config.data;
 
 using StringTools;
+
+typedef DadCharacter = OneOfTwo<online.CharacterOnline, Character>;
 
 class PlayStateOnline extends MusicBeatState
 {
