@@ -1,11 +1,17 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TextureAtlas imagePath="chaselect.png">
-	<!-- Created with Adobe Flash Professional version 15.0.0.173 -->
-	<!-- http://www.adobe.com/products/flash.html -->
-	<SubTexture name="chaselect basic0000" x="0" y="0" width="720" height="720" frameX="0" frameY="0" frameWidth="720" frameHeight="724"/>
-	<SubTexture name="chaselect basic0001" x="720" y="0" width="720" height="720" frameX="0" frameY="-4" frameWidth="720" frameHeight="724"/>
-	<SubTexture name="chaselect basic0002" x="0" y="720" width="720" height="720" frameX="0" frameY="-4" frameWidth="720" frameHeight="724"/>
+	<!-- Created with Adobe Animate version 18.0.2.126 -->
+	<!-- http://www.adobe.com/products/animate.html -->
+	<SubTexture name="chaselect basic0000" x="0" y="0" width="720" height="720"/>
+	<SubTexture name="chaselect basic0001" x="720" y="0" width="720" height="720"/>
+	<SubTexture name="chaselect basic0002" x="0" y="720" width="720" height="720"/>
 	<SubTexture name="chaselect white0000" x="720" y="720" width="720" height="720"/>
-	<SubTexture name="chaselect white0001" x="0" y="1440" width="720" height="720"/>
-	<SubTexture name="chaselect white0002" x="720" y="1440" width="720" height="720"/>
+	<SubTexture name="chaselect white0001" x="720" y="720" width="720" height="720"/>
+	<SubTexture name="chaselect white0002" x="0" y="1440" width="720" height="720"/>
+	<SubTexture name="chaselect white0003" x="720" y="1440" width="720" height="720"/>
+	<SubTexture name="chaselect white0004" x="720" y="1440" width="720" height="720"/>
+	<SubTexture name="chaselect white0005" x="720" y="1440" width="720" height="720"/>
+	<SubTexture name="chaselect white0006" x="0" y="2160" width="720" height="720"/>
+	<SubTexture name="chaselect white0007" x="0" y="2160" width="720" height="720"/>
+	<SubTexture name="chaselect white0008" x="0" y="2160" width="720" height="720"/>
 </TextureAtlas>
