@@ -43,6 +43,7 @@ class Config {
     public static function initsave(reset:Bool = false){
         if(!FlxG.save.data.played || reset){
             FlxG.save.data.played = true;
+            FlxG.save.data.loadass = true;
             FlxG.save.data.framerate = 60;
             FlxG.save.data.pauseonunfocus = true;
             FlxG.save.data.fullscreen = false;
@@ -55,6 +56,7 @@ class Config {
             FlxG.save.flush();
         }
         else{
+            (FlxG.save.data.loadass == null) ? FlxG.save.data.loadass=true:FlxG.save.data.loadass == FlxG.save.data.loadass;
             FlxG.autoPause = FlxG.save.data.pauseonunfocus;
             FlxG.drawFramerate = FlxG.save.data.framerate;
             FlxG.updateFramerate = FlxG.save.data.framerate;

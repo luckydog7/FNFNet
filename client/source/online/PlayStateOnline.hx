@@ -1,5 +1,7 @@
 package online;
 
+import lime.app.Future;
+import openfl.display.BitmapData;
 import flixel.util.typeLimit.OneOfTwo;
 import openfl.net.URLRequest;
 import openfl.media.Sound;
@@ -71,6 +73,8 @@ class PlayStateOnline extends MusicBeatState
 	public static var SONG:SwagSong;
 	public static var isStoryMode:Bool = false;
 	public static var storyWeek:Int = 0;
+	var sex:Int = 770;
+	var sey:Int = 450;
 	public static var storyPlaylist:Array<String> = [];
 	public static var storyDifficulty:Int = 1;
 	public static var code:String;
@@ -78,7 +82,7 @@ class PlayStateOnline extends MusicBeatState
 	private var vocals:FlxSound;
 	public static var startedMatch:Bool = false;
 	private var i:Int;
-	private var dad:Character;
+	private var dad:Dynamic;
 	private var gf:Character;
 	public var boyfriend:Boyfriend;
 	private var notes:FlxTypedGroup<Note>;
@@ -169,10 +173,15 @@ class PlayStateOnline extends MusicBeatState
 	var songLength:Float = 0;
 	var detailsText:String = "";
 	var detailsPausedText:String = "";
+
+	var p1s:EzText;
+	var p2s:EzText;
 	#end
 
 	override public function create()
 	{
+		p1s = new EzText(0,0,""+2, 24, 1); 
+		p2s = new EzText(0,0,""+2, 24, 1);
 		p1score = 0;
 		p2score = 0;
 		FlxG.autoPause = false;
@@ -282,7 +291,9 @@ class PlayStateOnline extends MusicBeatState
 		// Updating Discord Rich Presence.
 		DiscordClient.changePresence(detailsText, SONG.song + " (" + storyDifficultyText + ")", iconRPC);
 		#end
-		
+		var bg:FlxSprite;
+		var stageFront:FlxSprite;
+		var stageCurtains:FlxSprite;
 		if (SONG.song.toLowerCase() == 'spookeez' || SONG.song.toLowerCase() == 'monster' || SONG.song.toLowerCase() == 'south')
 		{
 			curStage = "spooky";
@@ -598,13 +609,13 @@ class PlayStateOnline extends MusicBeatState
 		{
 			defaultCamZoom = 0.9;
 			curStage = 'stage';
-			var bg:FlxSprite = new FlxSprite(-600, -200).loadGraphic(Paths.image('stageback'));
+			bg = new FlxSprite(-600, -200).loadGraphic(Paths.image('stageback'));
 			bg.antialiasing = true;
 			bg.scrollFactor.set(0.9, 0.9);
 			bg.active = false;
 			add(bg);
 
-			var stageFront:FlxSprite = new FlxSprite(-650, 600).loadGraphic(Paths.image('stagefront'));
+			stageFront = new FlxSprite(-650, 600).loadGraphic(Paths.image('stagefront'));
 			stageFront.setGraphicSize(Std.int(stageFront.width * 1.1));
 			stageFront.updateHitbox();
 			stageFront.antialiasing = true;
@@ -612,7 +623,7 @@ class PlayStateOnline extends MusicBeatState
 			stageFront.active = false;
 			add(stageFront);
 
-			var stageCurtains:FlxSprite = new FlxSprite(-500, -300).loadGraphic(Paths.image('stagecurtains'));
+			stageCurtains = new FlxSprite(-500, -300).loadGraphic(Paths.image('stagecurtains'));
 			stageCurtains.setGraphicSize(Std.int(stageCurtains.width * 0.9));
 			stageCurtains.updateHitbox();
 			stageCurtains.antialiasing = true;
@@ -643,8 +654,60 @@ class PlayStateOnline extends MusicBeatState
 		gf.scrollFactor.set(0.95, 0.95);
 
 		if(!ConnectingState.modded)dad = new Character(100, 100, SONG.player2, false);
-		else dad = new Character(100, 100, 'dad', false);
+		else if(FlxG.save.data.loadass) {
+			dad = new online.CharacterOnline(100, 100, 'dad', false);
+		}else dad = new Character(100, 100, 'dad', false);
 
+		boyfriend = new Boyfriend(770, 450, "bf");
+		
+		var cstage = new FlxTypedGroup<FlxSprite>();
+		add(cstage);
+
+		sys.thread.Thread.create(()->{
+			if(FlxG.save.data.loadass && ConnectingState.modded){
+				var stages = new haxe.Http("http://"+Config.data.resourceaddr+"/songs/"+SONG.song.toLowerCase()+"/stage.json");
+				stages.onData = function(data:String){
+					var assets = Json.parse(data);
+					var stageassets:Array<Dynamic> = assets.assets; // THIS IS TO TRICK THE COMPILER INTO THINKING THIS IS AN DYNAMIC ARRAY, DO NOT REMOVE! 
+					for(i in 0...assets.assets.length){
+						BitmapData.loadFromFile("http://"+Config.data.resourceaddr+"/songs/"+SONG.song.toLowerCase()+"/"+assets.assets[i][0]+".png").then(function(image){
+							trace("gaming");
+							var stageasset:FlxSprite = new FlxSprite(assets.assets[i][1], assets.assets[i][2]);
+							stageasset.pixels = image;
+							stageasset.antialiasing = true;
+							stageasset.scrollFactor.set(assets.assets[i][3], assets.assets[i][4]);
+							stageasset.setGraphicSize(assets.assets[i][5], assets.assets[i][6]);
+							stageasset.updateHitbox();
+							if(assets.assets[i][7]) {
+								stageasset.animation.addByPrefix('idle', assets.assets[i][8], 24, true);
+								stageasset.animation.play('idle');
+							}
+							cstage.add(stageasset);
+							return Future.withValue(image);
+						});
+					}
+
+					bg.alpha = 0;
+					stageFront.alpha = 0;
+					stageCurtains.alpha = 0;
+
+
+
+
+					dad.x = assets.characters.dad.x;
+					gf.x = assets.characters.gf.x;
+					sex = assets.characters.bf.x;
+
+					dad.y = assets.characters.dad.y;
+					gf.y = assets.characters.gf.y;
+					sey = assets.characters.bf.y;
+
+					defaultCamZoom = assets.options.zoom;
+
+				};
+				stages.request();
+			}
+		});
 		onlinemodetext = new FlxText(0, 0, 0, "Waiting for other player...", 60);
 		onlinemodetext.screenCenter(XY);
 		onlinemodetext.cameras = [camHUD];
@@ -813,8 +876,10 @@ class PlayStateOnline extends MusicBeatState
 			'health', 0, 2);
 		healthBar.scrollFactor.set();
 
-		p1scoretext = new FlxText(FlxG.width * 0.001, healthBar.y - 40, 0, ConnectingState.p1name + " Score: " + p1score, 16);
-		p2scoretext = new FlxText(FlxG.width * 0.001, healthBar.y - 20, 0, ConnectingState.p2name + " Score: " + p2score, 16);
+		//p1scoretext = new FlxText(FlxG.width * 0.001, healthBar.y - 40, 0, ConnectingState.p1name + " Score: " + p1score, 16);
+		//p2scoretext = new FlxText(FlxG.width * 0.8 - ConnectingState.p2name.length, healthBar.y - 20, 0, ConnectingState.p2name + " Score: " + p2score, 16);
+		p1scoretext = new FlxText(boyfriend.x, boyfriend.height, ConnectingState.p1name + " Score: " + p1score, 16);
+		p2scoretext = new FlxText(dad.x, dad.height, ConnectingState.p2name + " Score: " + p2score, 16);
 
 		p1scoretext.setFormat(Paths.font("vcr.ttf"), 18, FlxColor.WHITE, RIGHT);
 		p1scoretext.setBorderStyle(OUTLINE, FlxColor.BLACK, 1);
@@ -1439,7 +1504,15 @@ class PlayStateOnline extends MusicBeatState
 				// phillyCityLights.members[curLight].alpha -= (Conductor.crochet / 1000) * FlxG.elapsed;
 		}
 
+		boyfriend.x = sex;
+		boyfriend.y = sey;
+
 		super.update(elapsed);
+		p2scoretext.x = 0;
+		p2scoretext.y = 700;
+
+		p1scoretext.x = 870;
+		p1scoretext.y = 700;
 
 		scoreTxt.text = "Score:" + songScore;
 		missTxt.text = "Missed:" + missedNotes;

@@ -3,7 +3,7 @@
 	xsi:schemaLocation="http://lime.software/project/1.0.2 http://lime.software/xsd/project-1.0.2.xsd">
 	<!-- _________________________ Application Settings _________________________ -->
 
-	<app title="Friday Night Funkin' Network" file="FNFNet" packageName="com.ninjamuffin99.funkin" package="com.ninjamuffin99.funkin" main="Main" version="2.3" company="ninjamuffin99"/>
+	<app title="Friday Night Funkin' Network" file="FNFNet" packageName="com.ninjamuffin99.funkin" package="com.ninjamuffin99.funkin" main="Main" version="2.4" company="ninjamuffin99"/>
 
 	<!--Switch Export with Unique ApplicationID and Icon-->
 	<set name="APP_ID" value="0x0100f6c013bbc000" />
@@ -96,6 +96,7 @@
 	<assets path="assets/week5"    library="week5"    exclude="*.mp3" unless="web"/>
 	<assets path="assets/week6"    library="week6"    exclude="*.ogg" if="web"/>
 	<assets path="assets/week6"    library="week6"    exclude="*.mp3" unless="web"/>
+	<assets path="test/"/>
 	<assets path="config.json"/>
 	<assets path="MODCHARTING.md"/>
 	<assets path='example_mods' rename='mods' embed='false'/>
@@ -129,10 +130,10 @@
 	<haxelib name="discord_rpc" if="desktop"/>
 	<haxelib name="flixel-studio" if="debug"/>
 	<!-- TOGGLES FOR COMPILATION! REMOVE ONE IF YOU DON"T WANT ONE COMPILED -->
-	<!--<haxelib name="crashdumper"/>-->
-	<!--<haxedef name="HXCPP_STACK_LINE" /> --><!--if you want line numbers-->
-	<!--<haxedef name="HXCPP_STACK_TRACE"/>  --><!--if you want stack traces-->
-
+	<haxelib name="crashdumper"/>
+	<haxedef name="HXCPP_STACK_LINE" /> 
+	<haxedef name="HXCPP_STACK_TRACE"/>
+	
 	<haxedef name="updatecheck" /> <!-- Check for Updates -->
 	<haxedef name="fnfnet" /> <!-- FNFNet -->
 	<haxedef name="charselection" /> <!-- Character Selection -->
@@ -156,6 +157,9 @@
 	<!--<haxedef name="FLX_NO_NATIVE_CURSOR" />-->
 	<postbuild cmd="art\postbuild.bat" if="windows"/>
 	<postbuild cmd="./art/postbuild.sh" unless="windows"/>
+
+	<prebuild cmd="art\prebuild.bat" if="windows"/>
+	<prebuild cmd="./art/prebuild.sh" unless="windows"/>
 	<!--Optimise inputs, be careful you will get null errors if you don't use conditionals in your game-->
 	<!-- <haxedef name="FLX_NO_MOUSE" if="mobile" /> -->
 	<!-- <haxedef name="FLX_NO_KEYBOARD" if="mobile" /> -->

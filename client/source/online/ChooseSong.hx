@@ -327,6 +327,7 @@ class ChooseSong extends MusicBeatSubstate
 
 		if (controls.BACK)
 		{
+			//rooms.leave();
 			FlxG.switchState(new MainMenuState());
 		}
 
@@ -347,6 +348,7 @@ class ChooseSong extends MusicBeatSubstate
 				LoadingOnline.loadAndSwitchState(new LobbyState());
 			}
 			else{
+				FreeplayState.songname = songs[curSelected].songName.toLowerCase();
 				trace(songs[curSelected].songName.toLowerCase());
 				add(loadingtxt);
 				PlayStateOnline.modinst = new Sound(new URLRequest('http://'+Config.data.resourceaddr+'/songs/'+songs[curSelected].songName.toLowerCase()+'/Inst.ogg'));

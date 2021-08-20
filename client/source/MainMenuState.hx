@@ -180,7 +180,7 @@ class MainMenuState extends MusicBeatState
 			}
 			#end
 			if (FlxG.keys.justPressed.SIX) FlxG.openURL("https://www.youtube.com/watch?v=38FnpnflHEg");
-			if (FlxG.keys.justPressed.THREE) FlxG.sound.play(Paths.sound('ok'));
+			if (FlxG.keys.justPressed.THREE) LoadingState.loadAndSwitchState(new test.TestState());
 			if (controls.ACCEPT)
 			{
 				if (optionShit[curSelected] == 'donate')

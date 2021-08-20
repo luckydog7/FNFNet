@@ -1,0 +1,49 @@
+{
+    "character":{
+        "size": {
+            "width": 0,
+            "height": 0
+        },
+        "position": {
+            "x": "none",
+            "y": null
+        }
+    },
+    "animations": {
+        "idle": {
+            "prefix": "BF idle dance",
+            "offsets": {
+                "x": 0,
+                "y": 0
+            }
+        },
+        "up": {
+            "prefix": "BF NOTE UP",
+            "offsets": {
+                "x": 55,
+                "y": 92
+            }
+        },
+        "down": {
+            "prefix": "BF NOTE DOWN",
+            "offsets": {
+                "x": 0,
+                "y": -75
+            }
+        },
+        "left": {
+            "prefix": "BF NOTE LEFT",
+            "offsets": {
+                "x": 141,
+                "y": -11
+            }
+        },
+        "right": {
+            "prefix": "BF NOTE RIGHT",
+            "offsets": {
+                "x": 0,
+                "y": -11
+            }
+        }
+    }
+}

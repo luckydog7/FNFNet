@@ -39,7 +39,7 @@ class DiscordClient
 			details: "In the Menus",
 			state: null,
 			largeImageKey: 'icon',
-			largeImageText: "TrollEngine'"
+			largeImageText: "Play Online without forwarding ports!"
 		});
 	}
 

@@ -129,7 +129,7 @@ class ConnectingState extends MusicBeatState {
                                 LobbyState.p2.alpha = 0;
                                 if(PlayStateOnline.startedMatch) PlayStateOnline.leftText.text = "User left the game.";
                                 if(!PlayStateOnline.startedMatch)p2name = '';
-                                if(!PlayStateOnline.startedMatch)LobbyState.playertxt.members[1].applyMarkup("/r/Not Ready/r/", [new FlxTextFormatMarkerPair(new FlxTextFormat(FlxColor.RED), "/r/")]);
+                                if(!PlayStateOnline.playedgame)LobbyState.playertxt.members[1].applyMarkup("/r/Not Ready/r/", [new FlxTextFormatMarkerPair(new FlxTextFormat(FlxColor.RED), "/r/")]);
                             });
                             room.onMessage("retscore", function(message){
                                 PlayStateOnline.p1score = message.p1score;
@@ -220,6 +220,7 @@ class ConnectingState extends MusicBeatState {
                                 }
                                 trace(nmsongs.contains(message.song));
                                 if(!nmsongs.contains(message.song)){
+                                    FreeplayState.songname = sng;
                                     modded = true;
                                     remove(loadprog);
                                     loadprog = new Alphabet(0, 0, "Loading Instrumental...", true);

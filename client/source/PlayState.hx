@@ -1,6 +1,7 @@
 package;
 
-import flixel.util.typeLimit.OneOfTwo;
+import lime.app.Future;
+import openfl.display.BitmapData;
 import openfl.media.Sound;
 import openfl.utils.AssetCache;
 import flixel.util.FlxSave;
@@ -71,7 +72,7 @@ class PlayState extends MusicBeatState
 	var pressedNotes:Int = 0;
 	var grade:String = "NCY";
 	var gradetxt:FlxText;
-	private var dad:DadCharacter;
+	private var dad:online.CharacterOnline;
 	private var gf:Character;
 	public var boyfriend:Boyfriend;
 	private var notes:FlxTypedGroup<Note>;
@@ -136,6 +137,7 @@ class PlayState extends MusicBeatState
 	var missTxt:FlxText;
 	var accTxt:FlxText;
 	var noteDiff:Float;
+	public static var camPos:FlxPoint;
 	public static var campaignScore:Int = 0;
 
 	var defaultCamZoom:Float = 1.05;
@@ -195,7 +197,9 @@ class PlayState extends MusicBeatState
 		Conductor.mapBPMChanges(SONG);
 		Conductor.changeBPM(SONG.bpm);
 
-
+		var bg:FlxSprite;
+		var stageCurtains:FlxSprite;
+		var stageFront:FlxSprite;
 		#if desktop
 		// Making difficulty text for Discord Rich Presence.
 		switch (storyDifficulty)
@@ -553,13 +557,13 @@ class PlayState extends MusicBeatState
 		{
 			defaultCamZoom = 0.9;
 			curStage = 'stage';
-			var bg:FlxSprite = new FlxSprite(-600, -200).loadGraphic(Paths.image('stageback'));
+			bg = new FlxSprite(-600, -200).loadGraphic(Paths.image('stageback'));
 			bg.antialiasing = true;
 			bg.scrollFactor.set(0.9, 0.9);
 			bg.active = false;
 			add(bg);
 
-			var stageFront:FlxSprite = new FlxSprite(-650, 600).loadGraphic(Paths.image('stagefront'));
+			stageFront = new FlxSprite(-650, 600).loadGraphic(Paths.image('stagefront'));
 			stageFront.setGraphicSize(Std.int(stageFront.width * 1.1));
 			stageFront.updateHitbox();
 			stageFront.antialiasing = true;
@@ -567,7 +571,7 @@ class PlayState extends MusicBeatState
 			stageFront.active = false;
 			add(stageFront);
 
-			var stageCurtains:FlxSprite = new FlxSprite(-500, -300).loadGraphic(Paths.image('stagecurtains'));
+			stageCurtains = new FlxSprite(-500, -300).loadGraphic(Paths.image('stagecurtains'));
 			stageCurtains.setGraphicSize(Std.int(stageCurtains.width * 0.9));
 			stageCurtains.updateHitbox();
 			stageCurtains.antialiasing = true;
@@ -596,10 +600,59 @@ class PlayState extends MusicBeatState
 
 		gf = new Character(400, 130, gfVersion);
 		gf.scrollFactor.set(0.95, 0.95);
-		trace(MainMenuState.exemel);
-		dad = new online.CharacterOnline(100, 100, "dad", false, tex);
 
-		var camPos:FlxPoint = new FlxPoint(dad.getGraphicMidpoint().x, dad.getGraphicMidpoint().y);
+		dad = new online.CharacterOnline(100, 100, "dad", false);
+		boyfriend = new Boyfriend(770, 450, "bf");
+
+		var cstage = new FlxTypedGroup<FlxSprite>();
+		add(cstage);
+
+		sys.thread.Thread.create(()->{
+				var stages = new haxe.Http("http://"+Config.data.resourceaddr+"/songs/"+SONG.song.toLowerCase()+"/stage.json");
+				stages.onData = function(data:String){
+					var assets = Json.parse(data);
+					var stageassets:Array<Dynamic> = assets.assets; // THIS IS TO TRICK THE COMPILER INTO THINKING THIS IS AN DYNAMIC ARRAY, DO NOT REMOVE! 
+					for(i in 0...assets.assets.length){
+							BitmapData.loadFromFile("http://"+Config.data.resourceaddr+"/songs/"+SONG.song.toLowerCase()+"/"+assets.assets[i][0]+".png").then(function(image){
+								trace("gaming");
+								var stageasset:FlxSprite = new FlxSprite(assets.assets[i][1], assets.assets[i][2]);
+								stageasset.pixels = image;
+								stageasset.antialiasing = true;
+								stageasset.scrollFactor.set(assets.assets[i][3], assets.assets[i][4]);
+								stageasset.setGraphicSize(assets.assets[i][5], assets.assets[i][6]);
+								stageasset.updateHitbox();
+								if(assets.assets[i][7]) {
+									stageasset.animation.addByPrefix('idle', assets.assets[i][8], 24, true);
+									stageasset.animation.play('idle');
+								}
+								cstage.add(stageasset);
+								return Future.withValue(image);
+							});
+
+					}
+
+					bg.alpha = 0;
+					stageFront.alpha = 0;
+					stageCurtains.alpha = 0;
+
+
+
+
+					dad.x = assets.characters.dad.x;
+					gf.x = assets.characters.gf.x;
+					boyfriend.x = assets.characters.bf.x;
+
+					dad.y = assets.characters.dad.y;
+					gf.y = assets.characters.gf.y;
+					boyfriend.y = assets.characters.bf.y;
+
+					defaultCamZoom = assets.options.zoom;
+
+				};
+				stages.request();
+			});
+
+		camPos = new FlxPoint(dad.getGraphicMidpoint().x, dad.getGraphicMidpoint().y);
 
 		switch ("dad")
 		{
@@ -621,7 +674,7 @@ class PlayState extends MusicBeatState
 			case 'monster-christmas':
 				dad.y += 130;
 			case 'dad':
-				camPos.x += 400;
+				//camPos.x += 400;
 			case 'pico':
 				camPos.x += 600;
 				dad.y += 300;
@@ -641,7 +694,6 @@ class PlayState extends MusicBeatState
 				camPos.set(dad.getGraphicMidpoint().x + 300, dad.getGraphicMidpoint().y);
 		}
 
-		boyfriend = new Boyfriend(770, 450, "bf");
 
 		// REPOSITIONING PER STAGE
 		switch (curStage)
