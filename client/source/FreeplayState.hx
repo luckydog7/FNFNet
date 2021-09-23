@@ -184,6 +184,7 @@ class FreeplayState extends MusicBeatSubstate
                 changeDiff();
          }
          mdl.request();
+         addVirtualPad(FULL, A_B);
 		super.create();
 	}
 
