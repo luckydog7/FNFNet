@@ -37,7 +37,7 @@ class OutdatedSubState extends MusicBeatState
 			FlxG.openURL('https://gamebanana.com/mods/166622');
 			#end
 		}
-		if (controls.BACK)
+		if (controls.BACK || !leftState)
 		{
 			leftState = true;
 			FlxG.switchState(new MainMenuState());
