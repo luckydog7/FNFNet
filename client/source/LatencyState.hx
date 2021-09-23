@@ -33,6 +33,8 @@ class LatencyState extends FlxState
 		add(strumLine);
 
 		Conductor.changeBPM(120);
+		
+		
 
 		super.create();
 	}
