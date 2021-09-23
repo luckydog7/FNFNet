@@ -78,7 +78,7 @@ class GimmickState extends MusicBeatState
 			*/
 			// DONT PUT X IN THE FIRST PARAMETER OF new ALPHABET() !!
 		}
-		 
+		addVirtualPad(UP_DOWN, A_B);
 
 		super.create();
 	}
