@@ -1803,13 +1803,14 @@ class PlayState extends MusicBeatState
 			}
 			else{
 				trace('aweseom.');
+				FlxG.switchState(new MainMenuState());
 			}
 		});
 		#end
 		canPause = false;
 		FlxG.sound.music.volume = 0;
 		vocals.volume = 0;
-		FlxG.switchState(new MainMenuState());
+		//FlxG.switchState(new MainMenuState());
 	}
 
 	var endingSong:Bool = false;
