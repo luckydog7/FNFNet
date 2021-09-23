@@ -34,7 +34,9 @@ import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
 import flixel.util.FlxTimer;
+#if newgrounds
 import io.newgrounds.NG;
+#end
 import lime.app.Application;
 import lime.utils.Assets;
 import Controls.KeyboardScheme;
@@ -81,7 +83,9 @@ class TitleState extends MusicBeatState
 
 		super.create();
 
+		#if newgrounds
 		NGio.noLogin(APIStuff.API);
+		#end
 
 		#if ng
 		var ng:NGio = new N
@@ -306,7 +310,7 @@ class TitleState extends MusicBeatState
 
 		if (pressedEnter && !transitioning && skippedIntro)
 		{
-			#if !switch
+			#if (!switch && newgrounds)
 			NGio.unlockMedal(60960);
 
 			// If it's Friday according to da clock

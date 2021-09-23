@@ -36,7 +36,7 @@ class FNFNetMenu extends MusicBeatState{
     }
     override function create()
         {
-            #if sys
+            #if (sys && !mobile)
             DiscordClient.changePresence("In the FNFNet menu", null);
             #end
             FlxG.mouse.visible = true;

@@ -173,10 +173,10 @@ class PlayStateOnline extends MusicBeatState
 	var songLength:Float = 0;
 	var detailsText:String = "";
 	var detailsPausedText:String = "";
+	#end
 
 	var p1s:EzText;
 	var p2s:EzText;
-	#end
 
 	override public function create()
 	{

@@ -1,5 +1,5 @@
 package online;
-#if sys
+#if (sys && !mobile)
 import Discord.DiscordClient;
 #end
 import flixel.addons.ui.FlxInputText;
@@ -48,7 +48,7 @@ class LobbyState extends MusicBeatState{
             default:
                 'Normal';
         };
-        #if sys
+        #if (sys && !mobile)
         DiscordClient.changePresence("In the FNFNet Lobby", null);
         #end
         var info = new FlxText(-140, -55);

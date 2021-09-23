@@ -1,6 +1,6 @@
 package online;
 
-#if sys
+#if (sys && !mobile)
 import Discord.DiscordClient;
 #end
 import Config.ConfigData;
@@ -63,7 +63,7 @@ class ChatState extends MusicBeatState
         menuBG.screenCenter();
         menuBG.antialiasing = true;
         
-        #if sys
+        #if (sys && !mobile)
         DiscordClient.changePresence("Chatting in FNFNet", null);
         #end
         
