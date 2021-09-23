@@ -1,4 +1,4 @@
-package;
+package options;
 
 import flixel.ui.FlxButton;
 import flixel.addons.ui.FlxUIButton;
@@ -167,7 +167,7 @@ class CustomControlsState extends MusicBeatSubstate
 		var androidback:Bool = false;
 		#end
 		if (exitbutton.justReleased || androidback){
-			FlxG.switchState(new OldOptionsMenu());
+			FlxG.switchState(new OptionsMenu());
 		}
 		
 		for (touch in FlxG.touches.list){
