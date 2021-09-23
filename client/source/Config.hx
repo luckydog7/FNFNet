@@ -4,6 +4,9 @@ import haxe.Json;
 #if desktop
 import sys.io.File.getContent;
 #end
+import ui.FlxVirtualPad;
+import flixel.util.FlxSave;
+import flixel.math.FlxPoint;
 typedef ConfigData = {
     var width:Int;
     var height:Int;
