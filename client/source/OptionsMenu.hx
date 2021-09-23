@@ -63,7 +63,7 @@ class OptionsMenu extends MusicBeatState
 			"Pause on Unfocus", 
 			"Fullscreen", 
 			"Downscroll", 
-			"Keyboard Scheme", 
+			"Mobile controls", 
 			"Scripts",
 			"Stage Tester",
 			"Kade Input", 
@@ -80,7 +80,7 @@ class OptionsMenu extends MusicBeatState
 			"Pause when you aren't focusing on the game.", 
 			"If the game should run on fullscreen.", 
 			"Downscrolling for arrows.", 
-			"Choose between WASD or DFJK.", 
+			"Change mobile controls.", 
 			"Scripts that you can run.", 
 			"A easy test tool to port stages and characters.",
 			"Activate input similar to Kade Engine.",
@@ -160,6 +160,7 @@ class OptionsMenu extends MusicBeatState
 		}
 		changeTab();
 		add(tabtext);
+		addVirtualPad(FULL, A_B);
 		super.create();
 
 		//openSubState(new OptionsSubState());
@@ -174,7 +175,7 @@ class OptionsMenu extends MusicBeatState
 			Std.string(FlxG.autoPause), 
 			Std.string(FlxG.fullscreen), 
 			Std.string(FlxG.save.data.downscroll), 
-			kbd, 
+			'', 
 			"",
 			"",
 			Std.string(FlxG.save.data.kadeinput),
@@ -280,19 +281,8 @@ class OptionsMenu extends MusicBeatState
 						FlxG.save.data.downscroll = PlayState.downscroll;
 						FlxG.save.flush();
 						initSettings(false, 3, ""+PlayState.downscroll);
-					case "Keyboard Scheme":
-						if(kbd == "WASD"){
-							kbd = "DFJK";
-							controls.setKeyboardScheme(KeyboardScheme.Custom, true);
-							FlxG.save.data.ks = "DFJK";
-							FlxG.save.flush();
-							initSettings(false, 4, kbd);
-						}else{
-							kbd = "WASD";
-							controls.setKeyboardScheme(KeyboardScheme.Solo, true);
-							FlxG.save.data.ks = "WASD";
-							FlxG.save.flush();
-							initSettings(false, 4, kbd);
+					case "Mobile controls":
+						FlxG.switchState(new options.CustomControlsState());
 						}
 					case "Scripts":
 						FlxG.switchState(new ScriptState());	
