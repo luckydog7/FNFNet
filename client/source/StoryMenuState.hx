@@ -216,6 +216,7 @@ class StoryMenuState extends MusicBeatState
 		add(txtWeekTitle);
 
 		updateText();
+		addVirtualPad(FULL,A_B);
 
 		trace("Line 165");
 
