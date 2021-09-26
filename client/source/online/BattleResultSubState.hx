@@ -94,6 +94,7 @@ class BattleResultSubState extends MusicBeatSubstate
 		add(loseorwin);
 		add(aktc);
 		add(low);
+		addVirtualPad(NONE, A);
 		FlxG.sound.playMusic(Paths.music('breakfast'));
 		Conductor.changeBPM(100);
 
