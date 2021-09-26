@@ -36,8 +36,8 @@ class Config {
     public static var s:String = '{
         "width": 1280,
         "height": 720,
-        "addr": "127.0.0.1",
-        "resourceaddr": "127.0.0.1",
+        "addr": "net.fnf.general-infinity.tech",
+        "resourceaddr": "net.fnf.general-infinity.tech",
         "port": 2567
     }';
     

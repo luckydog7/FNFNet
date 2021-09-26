@@ -228,6 +228,7 @@ class ChooseSong extends MusicBeatSubstate
 			trace(md);
 		 */
 
+		addVirtualPad(FULL, A_B);
 		super.create();
 	}
 

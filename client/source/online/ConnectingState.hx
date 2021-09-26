@@ -449,10 +449,11 @@ class ConnectingState extends MusicBeatState {
 		add(motherfunkers);
 		add(loading);
         add(loadprog);
+        addVirtualPad(NONE, A_B);
         super.create();
     }
     override function update(elapsed:Float){
-        if(FlxG.keys.justPressed.ESCAPE){
+        if(controls.BACK){
             rooms.leave();
             FlxG.switchState(new FNFNetMenu());
         }

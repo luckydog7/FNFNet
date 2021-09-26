@@ -283,7 +283,6 @@ class OptionsMenu extends MusicBeatState
 						initSettings(false, 3, ""+PlayState.downscroll);
 					case "Mobile controls":
 						FlxG.switchState(new options.CustomControlsState());
-						}
 					case "Scripts":
 						FlxG.switchState(new ScriptState());	
 					case "Stage Tester":	

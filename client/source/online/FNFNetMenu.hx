@@ -98,15 +98,16 @@ class FNFNetMenu extends MusicBeatState{
             errortxt = new Alphabet(0, FlxG.height * 0.90, error, true);
             errortxt.screenCenter(X);
             add(errortxt);
+            addVirtualPad(FULL, A_B);
             super.create();
         }
         override function update(elapsed:Float){
             super.update(elapsed);
-            if(FlxG.keys.justPressed.LEFT) changeSelection(-1);
-            if(FlxG.keys.justPressed.RIGHT) changeSelection(1);
-            if(FlxG.keys.justPressed.UP) changeSelection(-2);
-            if(FlxG.keys.justPressed.DOWN) changeSelection(2);
-            if(FlxG.keys.justPressed.ESCAPE) FlxG.switchState(new MainMenuState());
+            if(controls.LEFT_P) changeSelection(-1);
+            if(controls.RIGHT_P) changeSelection(1);
+            if(controls.UP_P) changeSelection(-2);
+            if(controls.DOWN_P) changeSelection(2);
+            if(controls.BACK) FlxG.switchState(new MainMenuState());
             if(FlxG.keys.justPressed.F2) FlxG.switchState(new SingleplayerMods());
 
             if(controls.ACCEPT){
