@@ -203,6 +203,7 @@ class ChatState extends MusicBeatState
         UI_box.addGroup(tab_group_rules);
         add(UI_box);
         add(okButton);
+        addVirtualPad(NONE, A_B);
 
 		super.create();
 	}
@@ -215,10 +216,23 @@ class ChatState extends MusicBeatState
             txtbox.text = "";
             txtbox.caretIndex = 0;
         }
-        if(FlxG.keys.justPressed.ESCAPE) {
+        if(FlxG.keys.justPressed.ESCAPE || controls.BACK) {
             if(connected)rooms.leave();
             FlxG.switchState(new FNFNetMenu());
         }
+        for (touch in FlxG.touches){
+        	if (touch.overlaps(usnbox) && touch.justPressed && isUsN){
+        		FlxG.stage.window.textInputEnabled = true;
+        	}
+        	if (touch.overlaps(txtbox) && touch.justPressed && !isUsN){
+        		FlxG.stage.window.textInputEnabled = true;
+        	}
+        }
+        	#if android
+        	if (FlxG.android.justPressed.BACK){
+        		FlxG.stage.window.textInputEnabled = false;
+        	}
+        	#end
 	}
     public function changeUsername(){
         usnbox.visible = !usnbox.visible;
