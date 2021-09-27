@@ -179,6 +179,7 @@ class LobbyState extends MusicBeatState{
         add(p2name);
         add(playertxt);
         add(UI_box);
+        addVirtualPad(NONE, A_B);
         if(ConnectingState.conmode != "join")add(roomcode);
 
         super.create();
@@ -190,7 +191,7 @@ class LobbyState extends MusicBeatState{
         if(PlayStateOnline.startedMatch){
             LoadingOnline.loadAndSwitchState(new PlayStateOnline());
         }
-        if(FlxG.keys.justPressed.ESCAPE) {
+        if(FlxG.keys.justPressed.ESCAPE || controls.BACK) {
             rooms.leave();
             FlxG.switchState(new FNFNetMenu());
         }

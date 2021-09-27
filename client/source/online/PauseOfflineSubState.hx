@@ -113,6 +113,7 @@ class PauseOfflineSubState extends MusicBeatSubstate
 			songText.targetY = i;
 			grpMenuShit.add(songText);
 		}
+		addVirtualPad(UP_DOWN, A_B);
 
 		changeSelection();
 

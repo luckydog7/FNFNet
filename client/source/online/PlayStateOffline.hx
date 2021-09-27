@@ -1,5 +1,7 @@
 package online;
-
+#if mobileC
+import ui.Mobilecontrols;
+#end
 import openfl.media.Sound;
 import openfl.utils.AssetCache;
 import flixel.util.FlxSave;
@@ -52,6 +54,9 @@ using StringTools;
 
 class PlayStateOffline extends MusicBeatState
 {
+	#if mobileC
+	var mcontrols:Mobilecontrols; 
+	#end
 	public static var modinst:Sound;
 	public static var modvoices:Sound;
 	public static var gimmick:Bool;
@@ -799,6 +804,30 @@ class PlayStateOffline extends MusicBeatState
 		missTxt.cameras = [camHUD];
 		accTxt.cameras = [camHUD];
 		gradetxt.cameras = [camHUD];
+		#if mobileC
+			mcontrols = new Mobilecontrols();
+			switch (mcontrols.mode)
+			{
+				case VIRTUALPAD_RIGHT | VIRTUALPAD_LEFT | VIRTUALPAD_CUSTOM:
+					controls.setVirtualPad(mcontrols._virtualPad, FULL, NONE);
+				case HITBOX:
+					controls.setHitBox(mcontrols._hitbox);
+				default:
+			}
+			trackedinputs = controls.trackedinputs;
+			controls.trackedinputs = [];
+
+			var camcontrol = new FlxCamera();
+			FlxG.cameras.add(camcontrol);
+			camcontrol.bgColor.alpha = 0;
+			mcontrols.cameras = [camcontrol];
+
+			//mcontrols.visible = false;
+			mcontrols.alpha = 0;
+
+			add(mcontrols);
+		#end
+
 		// if (SONG.song == 'South')
 		// FlxG.camera.alpha = 0.7;
 		// UI_camera.zoom = 1;
@@ -866,7 +895,19 @@ class PlayStateOffline extends MusicBeatState
 	function startCountdown():Void
 	{
 		inCutscene = false;
-
+		#if mobileC
+		//mcontrols.visible = true;
+		new FlxTimer().start(0.1, function(tmr:FlxTimer)
+		{
+			mcontrols.alpha += 0.1;
+			if (mcontrols.alpha != 0.7){
+				tmr.reset(0.1);
+			}
+			else{
+				trace('aweseom.');
+			}
+		});
+		#end
 		generateStaticArrows(0);
 		generateStaticArrows(1);
 
@@ -1700,6 +1741,20 @@ class PlayStateOffline extends MusicBeatState
 	public function endSong():Void
 	{
 		canPause = false;
+		#if mobileC
+		//aaa
+		new FlxTimer().start(0.1, function(tmr:FlxTimer)
+		{
+			mcontrols.alpha -= 0.1;
+			if (mcontrols.alpha != 0){
+				tmr.reset(0.1);
+			}
+			else{
+				trace('aweseom.');
+				FlxG.switchState(new MainMenuState());
+			}
+		});
+		#end
 		FlxG.sound.music.volume = 0;
 		vocals.volume = 0;
 		FlxG.switchState(new FNFNetMenu());
