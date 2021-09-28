@@ -240,7 +240,7 @@ class ChatState extends MusicBeatState
     public function changeUsername(){
         usnbox.visible = !usnbox.visible;
         isUsN = !isUsN;
-        FlxG.stage.window.textInputEnabled = !FlxG.stage.window.textInputEnabled
+        FlxG.stage.window.textInputEnabled = !FlxG.stage.window.textInputEnabled;
         if(usnbox.text != ""){
             username = usnbox.text;
             FlxG.save.data.username = usnbox.text;
