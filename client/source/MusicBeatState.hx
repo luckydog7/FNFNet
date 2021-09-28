@@ -23,6 +23,7 @@ import flixel.addons.plugin.screengrab.FlxScreenGrab;
 class MusicBeatState extends FlxUIState
 {
 	private var topCam:FlxCamera;
+	var camShit:FlxCamera;
 	private var lastBeat:Float = 0;
 	private var lastStep:Float = 0;
 	var geom:flash.geom.Rectangle;
@@ -39,7 +40,11 @@ class MusicBeatState extends FlxUIState
 	// adding virtualpad to state
 	public function addVirtualPad(?DPad:FlxDPadMode, ?Action:FlxActionMode) {
 		_virtualpad = new FlxVirtualPad(DPad, Action);
+		camShit = new FlxCamera();
+		camShit.bgColor.alpha = 0;
+		FlxG.cameras.add(camShit);
 		_virtualpad.alpha = 0.75;
+		_virtualpad.cameras = [camShit];
 		add(_virtualpad);
 		controls.setVirtualPad(_virtualpad, DPad, Action);
 		trackedinputs = controls.trackedinputs;
