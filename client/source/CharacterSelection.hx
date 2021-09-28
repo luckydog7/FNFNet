@@ -82,6 +82,7 @@ class CharacterSelection extends MusicBeatState
 		add(funkers);
 		add(icon);
 		changeSelection();
+		addVirtualPad(UP_DOWN, A_B);
 		super.create();
 	}
 
