@@ -3,6 +3,7 @@ import ui.FlxVirtualPad;
 import flixel.input.actions.FlxActionInput;
 import Conductor.BPMChangeEvent;
 import flixel.FlxG;
+import flixel.FlxCamera;
 import flixel.FlxSubState;
 
 class MusicBeatSubstate extends FlxSubState
@@ -14,7 +15,7 @@ class MusicBeatSubstate extends FlxSubState
 
 	private var lastBeat:Float = 0;
 	private var lastStep:Float = 0;
-
+	var camShit:FlxCamera;
 	private var curStep:Int = 0;
 	private var curBeat:Int = 0;
 	private var controls(get, never):Controls;
@@ -25,7 +26,11 @@ class MusicBeatSubstate extends FlxSubState
 	// adding virtualpad to state
 	public function addVirtualPad(?DPad:FlxDPadMode, ?Action:FlxActionMode) {
 		_virtualpad = new FlxVirtualPad(DPad, Action);
+		camShit = new FlxCamera();
+		camShit.bgColor.alpha = 0;
+		FlxG.cameras.add(camShit);
 		_virtualpad.alpha = 0.75;
+		_virtualpad.cameras = [camShit];
 		add(_virtualpad);
 		controls.setVirtualPad(_virtualpad, DPad, Action);
 		trackedinputs = controls.trackedinputs;
