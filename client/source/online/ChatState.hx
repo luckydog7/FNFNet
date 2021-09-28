@@ -231,9 +231,6 @@ class ChatState extends MusicBeatState
         if (controls.ACCEPT && txtbox.text == "" && !isUsN){
         	FlxG.stage.window.textInputEnabled = !FlxG.stage.window.textInputEnabled;
         }
-        if (controls.ACCEPT && usnbox.text == "" && isUsN){
-        	FlxG.stage.window.textInputEnabled = !FlxG.stage.window.textInputEnabled;
-        }
         	#if android
         	if (FlxG.android.justPressed.BACK){
         		FlxG.stage.window.textInputEnabled = false;
@@ -243,6 +240,7 @@ class ChatState extends MusicBeatState
     public function changeUsername(){
         usnbox.visible = !usnbox.visible;
         isUsN = !isUsN;
+        FlxG.stage.window.textInputEnabled = !FlxG.stage.window.textInputEnabled
         if(usnbox.text != ""){
             username = usnbox.text;
             FlxG.save.data.username = usnbox.text;
