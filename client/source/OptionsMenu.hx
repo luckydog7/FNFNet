@@ -426,7 +426,7 @@ class OptionsMenu extends MusicBeatState
 					'< category >',
 					'Load Custom Assets',
 					'Downscroll',
-					'Keyboard Scheme',
+					'Mobile controls',
 					'Kade Input',
 					'Instant Restart'
 				];
