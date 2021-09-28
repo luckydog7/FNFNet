@@ -211,7 +211,7 @@ class ChatState extends MusicBeatState
 	override function update(elapsed:Float)
 	{
         super.update(elapsed);
-        if(FlxG.keys.justPressed.ENTER && txtbox.text != "" && !isUsN) {
+        if((FlxG.keys.justPressed.ENTER || controls.ACCEPT) && txtbox.text != "" && !isUsN) {
             if(connected)rooms.send("message", {message: txtbox.text});
             txtbox.text = "";
             txtbox.caretIndex = 0;
@@ -220,13 +220,19 @@ class ChatState extends MusicBeatState
             if(connected)rooms.leave();
             FlxG.switchState(new FNFNetMenu());
         }
-        for (touch in FlxG.touches.list){
+        /*for (touch in FlxG.touches.list){
         	if (touch.overlaps(usnbox) && touch.justPressed && isUsN){
         		FlxG.stage.window.textInputEnabled = true;
         	}
         	if (touch.overlaps(txtbox) && touch.justPressed && !isUsN){
         		FlxG.stage.window.textInputEnabled = true;
         	}
+        }*/
+        if (controls.ACCEPT && txtbox.text == "" && !isUsN){
+        	FlxG.stage.window.textInputEnabled = !FlxG.stage.window.textInputEnabled;
+        }
+        if (controls.ACCEPT && usnbox.text == "" && isUsN){
+        	FlxG.stage.window.textInputEnabled = !FlxG.stage.window.textInputEnabled;
         }
         	#if android
         	if (FlxG.android.justPressed.BACK){
