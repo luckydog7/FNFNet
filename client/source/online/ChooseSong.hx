@@ -20,11 +20,13 @@ import lime.utils.Assets;
 import io.colyseus.Client;
 import io.colyseus.Room;
 import Controls.*;
+//import ui.FlxVirtualPad as thepad;
 
 using StringTools;
 
 class ChooseSong extends MusicBeatSubstate
 {
+	var stupidPad:ui.FlxVirtualPad;
 	var nmsongs:Array<String> = [
 		'Tutorial',
 		'Test',
@@ -190,7 +192,7 @@ class ChooseSong extends MusicBeatSubstate
 		diffText.font = scoreText.font;
 		add(diffText);
 
-		dumbText = new FlxText(scoreText.x, scoreText.y + (36 * 2), 0, "Press M to switch to mods.", 24);
+		dumbText = new FlxText(scoreText.x, scoreText.y + (36 * 2), 0, "Press M/C to switch to mods.", 24);
 		dumbText.font = scoreText.font;
 		add(dumbText);
 
@@ -228,7 +230,10 @@ class ChooseSong extends MusicBeatSubstate
 			trace(md);
 		 */
 
-		addVirtualPad(FULL, A_B);
+		addVirtualPad(FULL, NONE);
+		stupidPad = new FlxVirtualPad(FULL, A_B_C);
+		stupidPad.alpha = 0.65;
+		this.add(stupidPad);
 		super.create();
 	}
 
@@ -255,7 +260,10 @@ class ChooseSong extends MusicBeatSubstate
 	override function update(elapsed:Float)
 	{
 		super.update(elapsed);
-		if(FlxG.keys.justPressed.M){
+		var pressedA:Bool = stupidPad.buttonA.justPressed;
+		var pressedB:Bool = stupidPad.buttonB.justPressed;
+		var pressedC:Bool = stupidPad.buttonC.justPressed;
+		if(FlxG.keys.justPressed.M || pressedC){
 			if(!modtab){
 				modtab = true;
 				scoreBG.setGraphicSize(Std.int(scoreBG.width), Std.int(scoreBG.height + 700));
@@ -311,7 +319,7 @@ class ChooseSong extends MusicBeatSubstate
 		scoreText.text = "PERSONAL BEST:" + lerpScore;
 		var upP = controls.UP_P;
 		var downP = controls.DOWN_P;
-		var accepted = controls.ACCEPT;
+		var accepted = pressedA;
 
 		if (upP || FlxG.mouse.wheel > 0)
 		{
@@ -326,7 +334,7 @@ class ChooseSong extends MusicBeatSubstate
 		if (controls.RIGHT_P)
 			changeDiff(1);
 
-		if (controls.BACK)
+		if (pressedB)
 		{
 			//rooms.leave();
 			FlxG.switchState(new MainMenuState());
