@@ -47,6 +47,7 @@ class FNFNetMenu extends MusicBeatState{
             logo.setGraphicSize(Std.int(logo.width / 1.6), Std.int(logo.height / 1.6));
             
             jfc = new FlxInputText(50, 100, 150, "", 16);
+            jfc.focusGained = () -> FlxG.stage.window.textInputEnabled = true;
             jbt = new FlxButton(jfc.x + 150, jfc.y, "Join", function(){
                 FlxG.switchState(new ConnectingState('battle', 'code', jfc.text));
             });

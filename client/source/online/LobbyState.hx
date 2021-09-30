@@ -134,6 +134,7 @@ class LobbyState extends MusicBeatState{
         usnbox.background = true;
         usnbox.backgroundColor = FlxColor.WHITE;
         usnbox.borderColor = 0xFFFFFFFF;
+        usnbox.focusGained = () -> FlxG.stage.window.textInputEnabled = true;
 
         readybtn = new FlxButton(50, 50, "Ready", function(){
             ready = !ready;

@@ -20,7 +20,7 @@ import lime.utils.Assets;
 import io.colyseus.Client;
 import io.colyseus.Room;
 import Controls.*;
-//import ui.FlxVirtualPad as thepad;
+import ui.FlxVirtualPad;
 
 using StringTools;
 
@@ -229,8 +229,7 @@ class ChooseSong extends MusicBeatSubstate
 
 			trace(md);
 		 */
-
-		addVirtualPad(FULL, NONE);
+		// addVirtualPad(FULL, NONE);
 		stupidPad = new FlxVirtualPad(FULL, A_B_C);
 		stupidPad.alpha = 0.65;
 		this.add(stupidPad);
@@ -317,8 +316,8 @@ class ChooseSong extends MusicBeatSubstate
 			lerpScore = intendedScore;
 
 		scoreText.text = "PERSONAL BEST:" + lerpScore;
-		var upP = controls.UP_P;
-		var downP = controls.DOWN_P;
+		var upP = controls.UP_P || stupidPad.buttonUp.justPressed;
+		var downP = controls.DOWN_P || stupidPad.buttonDown.justPressed;
 		var accepted = pressedA;
 
 		if (upP || FlxG.mouse.wheel > 0)
@@ -329,9 +328,9 @@ class ChooseSong extends MusicBeatSubstate
 		{
 			changeSelection(1);
 		}
-		if (controls.LEFT_P)
+		if (controls.LEFT_P || stupidPad.buttonLeft.justPressed)
 			changeDiff(-1);
-		if (controls.RIGHT_P)
+		if (controls.RIGHT_P || stupidPad.buttonRight.justPressed)
 			changeDiff(1);
 
 		if (pressedB)

@@ -220,6 +220,12 @@ class ChatState extends MusicBeatState
             if(connected)rooms.leave();
             FlxG.switchState(new FNFNetMenu());
         }
+
+        if (FlxG.touches.list[0] != null)
+            if ((FlxG.touches.list[0].overlaps(usnbox) || FlxG.touches.list[0].overlaps(txtbox)) && FlxG.touches.list[0].justPressed)
+                FlxG.stage.window.textInputEnabled = true;
+
+
         /*for (touch in FlxG.touches.list){
         	if (touch.overlaps(usnbox) && touch.justPressed && isUsN){
         		FlxG.stage.window.textInputEnabled = true;
