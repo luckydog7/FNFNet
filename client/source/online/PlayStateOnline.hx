@@ -897,7 +897,7 @@ class PlayStateOnline extends MusicBeatState
 		p1scoretext.cameras = [camHUD];
 		p2scoretext.cameras = [camHUD];
 
-		iconP1 = new HealthIcon(SONG.player1, true);
+		iconP1 = new HealthIcon('bf', true);
 		iconP1.y = healthBar.y - (iconP1.height / 2);
 
 		if(!ConnectingState.modded)iconP2 = new HealthIcon(SONG.player2, false);
